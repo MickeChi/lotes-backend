@@ -1,5 +1,6 @@
 package com.lotes.lotesbackend.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -37,15 +38,14 @@ public class Proyecto {
     @Column(name = "punto_partida")
     private String puntoPartida;
 
-    @OneToMany(mappedBy = "proyecto", fetch = FetchType.EAGER)
-    private List<Fraccion> fracciones;
-
-    @OneToMany(mappedBy = "proyecto", fetch = FetchType.EAGER)
-    private List<Colindancia> colindancias;
+    //@OneToMany(mappedBy = "proyecto", fetch = FetchType.EAGER)
+    //private List<Fraccion> fracciones;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    //Las colindancias del proyecto se crean como Fracciones con colindanciaProyecto = true
 }
