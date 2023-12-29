@@ -10,10 +10,6 @@ public class LotesBackendApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(LotesBackendApplication.class, args);
 	}
-	
-	@Bean
-    public ModelMapper getModelMapper() { 
-        return new ModelMapper(); 
-    } 
+
 
 }

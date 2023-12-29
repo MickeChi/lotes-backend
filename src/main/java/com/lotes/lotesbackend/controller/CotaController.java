@@ -50,24 +50,10 @@ public class CotaController {
     }
 
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody CotaDTO fraccionDTO){
+    public ResponseEntity<?> create(@RequestBody CotaDTO cotaDTO){
 
-        CotaDTO cota = new CotaDTO();
-        //cota.setFraccion(frac); //Fraccion a la que pertenece
-        cota.setOrden(1);
-        cota.setOrientacion(Orientacion.ESTE);
-        cota.setMedida(new BigDecimal(19.5));
-        cota.setTipoLinea(TipoLinea.RECTA);
-
-        List<FraccionDTO> colindancias = new ArrayList<>();
-        //colindancias.add(frac2);
-        cota.setColindancias(colindancias);
-
-        cota = cotaService.save(cota);
-
-
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(cota);
+        cotaDTO = cotaService.save(cotaDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(cotaDTO);
 
     }
 

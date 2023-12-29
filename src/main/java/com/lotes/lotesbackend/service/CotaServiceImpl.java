@@ -4,7 +4,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.lotes.lotesbackend.dto.FraccionDTO;
+import com.lotes.lotesbackend.entity.Fraccion;
+import com.lotes.lotesbackend.repository.FraccionRepository;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +21,9 @@ public class CotaServiceImpl implements CotaService{
 	
 	@Autowired
 	CotaRepository cotaRepository;
+
+	@Autowired
+	FraccionRepository fraccionRepository;
 	
 	@Autowired
 	ModelMapper modelMapper;
@@ -40,7 +47,20 @@ public class CotaServiceImpl implements CotaService{
 
 	@Override
 	public CotaDTO save(CotaDTO cotaDto) {
-		Cota cota = this.cotaRepository.save(this.modelMapper.map(cotaDto, Cota.class));
+		Cota cota = this.modelMapper.map(cotaDto, Cota.class);
+		//List<Fraccion> colindancias = cotaDto.getColindancias().stream().map(c -> fraccionRepository.findById(c).get()).toList();
+		//cota.setColindancias(colindancias);
+
+		cota = this.cotaRepository.save(cota);
+
+		/*TypeMap<Cota, CotaDTO> propertyMapper = this.modelMapper.createTypeMap(Cota.class, CotaDTO.class);
+		propertyMapper.addMappings(
+				mapper -> mapper.map(src -> src.getFraccion().getId(), CotaDTO::setFraccionId)
+		);*/
+		/*propertyMapper.addMappings(
+				mapper -> mapper.map(src -> src.getColindancias().stream().map(Fraccion::getId).toList(), CotaDTO::setColindancias)
+		);*/
+
 		return this.modelMapper.map(cota, CotaDTO.class);
 	}
 

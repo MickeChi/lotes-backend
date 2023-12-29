@@ -52,52 +52,15 @@ public class FraccionController {
     @PostMapping
     public ResponseEntity<?> create(@RequestBody FraccionDTO fraccionDTO){
 
-        FraccionDTO frac = new FraccionDTO();
-        frac.setFraccion(1);
-        frac.setColonia("dos por 3");
-        frac.setClase("lote rustico");
-        frac.setDescripcion("sdfs dfds wervef er er e");
-        frac.setFinca("merida");
-        frac.setTipoColindancia(TipoColindancia.LOTE);
-        Optional<ProyectoDTO> proyOp = proyectoService.findById(1L);
+        //TipoColindancia.of(fraccionDTO.getTipoColindancia());
+        //fraccionDTO.setTipoColindancia(TipoColindancia.LOTE);
+        Optional<ProyectoDTO> proyOp = proyectoService.findById(fraccionDTO.getProyecto().getId());
         if(proyOp.isPresent()){
             fraccionDTO.setProyecto(proyOp.get());
         }
 
-        frac = fraccionService.save(frac);
-
-        FraccionDTO frac2 = new FraccionDTO();
-        frac2.setFraccion(2);
-        frac2.setColonia("dos por 3");
-        frac2.setClase("lote rustico");
-        frac2.setDescripcion("sdfs dfds wervef er er e");
-        frac2.setFinca("merida");
-        frac2.setTipoColindancia(TipoColindancia.LOTE);
-        if(proyOp.isPresent()){
-            frac2.setProyecto(proyOp.get());
-        }
-        frac2 = fraccionService.save(frac2);
-
-        /*
-        CotaDTO cota = new CotaDTO();
-        cota.setFraccion(frac); //Fraccion a la que pertenece
-        cota.setOrden(1);
-        cota.setOrientacion(Orientacion.ESTE);
-        cota.setMedida(new BigDecimal(19.5));
-        cota.setTipoLinea(TipoLinea.RECTA);
-
-        List<FraccionDTO> colindancias = new ArrayList<>();
-        colindancias.add(frac2);
-        cota.setColindancias(colindancias);
-
-        cota = cotaService.save(cota);
-        List<CotaDTO> cotas = new ArrayList<>();
-        cotas.add(cota);
-        frac.setCotas(cotas);
-
-         */
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(frac);
+        fraccionDTO = fraccionService.save(fraccionDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(fraccionDTO);
 
     }
 

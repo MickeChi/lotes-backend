@@ -1,16 +1,14 @@
 package com.lotes.lotesbackend.dto;
 
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Set;
-
 import com.lotes.lotesbackend.constants.Orientacion;
 import com.lotes.lotesbackend.constants.TipoLinea;
-
 import lombok.Data;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 @Data
-public class CotaDTO {
+public class CotaRequestDTO {
 	private Long id;
 	
 	private int orden;
@@ -21,12 +19,9 @@ public class CotaDTO {
     
     private BigDecimal medida;
     
-    private FraccionDTO fraccion;
-    //private Long fraccionId;
-
-    //private List<Long> colindancias;
+    private Long fraccionId;
     
-    private List<FraccionDTO> colindancias;
+    private List<Long> colindancias;
 
 
 }
