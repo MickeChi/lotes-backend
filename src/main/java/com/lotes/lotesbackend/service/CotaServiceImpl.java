@@ -4,11 +4,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.lotes.lotesbackend.dto.FraccionDTO;
-import com.lotes.lotesbackend.entity.Fraccion;
 import com.lotes.lotesbackend.repository.FraccionRepository;
+import com.lotes.lotesbackend.utils.CotaMaps;
+import com.lotes.lotesbackend.utils.FraccionMaps;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeMap;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,8 +25,14 @@ public class CotaServiceImpl implements CotaService{
 	@Autowired
 	FraccionRepository fraccionRepository;
 	
-	@Autowired
+	/*@Autowired*/
 	ModelMapper modelMapper;
+
+	public CotaServiceImpl() {
+		this.modelMapper = new ModelMapper();
+		this.modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+		this.modelMapper.addMappings(CotaMaps.cotaDTOMap);
+	}
 
 	@Override
 	public List<CotaDTO> findAll() {

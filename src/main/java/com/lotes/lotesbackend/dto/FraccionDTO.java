@@ -36,6 +36,8 @@ public class FraccionDTO {
 
     private ProyectoDTO proyecto;
 
+    private Long proyectoId;
+
     private List<CotaDTO> cotas;
 
     //Datos Colindancia

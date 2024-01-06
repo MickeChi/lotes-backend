@@ -22,11 +22,12 @@ public class CotaDTO {
     private BigDecimal medida;
     
     private FraccionDTO fraccion;
-    //private Long fraccionId;
 
-    //private List<Long> colindancias;
-    
+    private Long fraccionId;
+
     private List<FraccionDTO> colindancias;
+
+    private List<Long> colindanciasIds;
 
 
 }
