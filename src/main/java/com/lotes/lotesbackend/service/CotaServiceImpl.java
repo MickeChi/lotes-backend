@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import com.lotes.lotesbackend.repository.FraccionRepository;
 import com.lotes.lotesbackend.utils.CotaMaps;
 import com.lotes.lotesbackend.utils.FraccionMaps;
+import com.lotes.lotesbackend.utils.GenericMapper;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,19 +19,17 @@ import com.lotes.lotesbackend.repository.CotaRepository;
 
 @Service
 public class CotaServiceImpl implements CotaService{
-	
+
 	@Autowired
 	CotaRepository cotaRepository;
 
 	@Autowired
 	FraccionRepository fraccionRepository;
-	
-	/*@Autowired*/
-	ModelMapper modelMapper;
+
+	private final ModelMapper modelMapper;
 
 	public CotaServiceImpl() {
-		this.modelMapper = new ModelMapper();
-		this.modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+		this.modelMapper = GenericMapper.getMapper();
 		this.modelMapper.addMappings(CotaMaps.cotaDTOMap);
 	}
 
@@ -46,7 +45,7 @@ public class CotaServiceImpl implements CotaService{
 		Optional<CotaDTO> cotaDtoOp = Optional.empty();
 		Optional<Cota> cotaOp = this.cotaRepository.findById(id);
 		if(cotaOp.isPresent()) {
-			cotaDtoOp = Optional.of(this.modelMapper.map(cotaOp.get(), CotaDTO.class)); 
+			cotaDtoOp = Optional.of(this.modelMapper.map(cotaOp.get(), CotaDTO.class));
 		}
 		return cotaDtoOp;
 	}
@@ -76,8 +75,8 @@ public class CotaServiceImpl implements CotaService{
 		if(fracOp.isPresent()) {
 			Cota cota = this.cotaRepository.save(this.modelMapper.map(cotaDto, Cota.class));
 			cotaDto = this.modelMapper.map(cota, CotaDTO.class);
-		}		
-		
+		}
+
 		return cotaDto;
 	}
 

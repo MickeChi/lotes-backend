@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.lotes.lotesbackend.utils.GenericMapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,9 +18,12 @@ public class ProyectoServiceImpl implements ProyectoService{
 	
 	@Autowired
 	private ProyectoRepository proyectoRepository;
-	
-	@Autowired
-    private ModelMapper modelMapper; 
+
+    private final ModelMapper modelMapper;
+
+	public ProyectoServiceImpl() {
+		this.modelMapper = GenericMapper.getMapper();
+	}
 
 	@Override
 	public List<ProyectoDTO> findAll() {

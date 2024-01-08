@@ -11,6 +11,8 @@ public class ProyectoDTO {
 	
     private Long id;
 
+    private String titulo;
+
     private String estado;
 
     private String municipio;

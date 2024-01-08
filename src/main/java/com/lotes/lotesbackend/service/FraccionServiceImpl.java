@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import com.lotes.lotesbackend.entity.Proyecto;
 import com.lotes.lotesbackend.utils.FraccionMaps;
+import com.lotes.lotesbackend.utils.GenericMapper;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +22,10 @@ public class FraccionServiceImpl implements FraccionService{
 	@Autowired
 	FraccionRepository fraccionRepository;
 	
-	ModelMapper modelMapper;
+	private final ModelMapper modelMapper;
 
 	public FraccionServiceImpl() {
-		this.modelMapper = new ModelMapper();
-		this.modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+		this.modelMapper = GenericMapper.getMapper();
 		this.modelMapper.addMappings(FraccionMaps.fraccionDtoMap);
 	}
 
