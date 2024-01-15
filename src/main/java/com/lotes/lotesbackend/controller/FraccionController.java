@@ -34,8 +34,13 @@ public class FraccionController {
     ModelMapper modelMapper;
 
     @GetMapping
-    public ResponseEntity<?> findAll(){
-        List<FraccionDTO> fraccionsList = fraccionService.findAll();
+    public ResponseEntity<?> findAll(@RequestParam(name = "proyectoId") Long proyectoId){
+        List<FraccionDTO> fraccionsList = new ArrayList<>();
+        if(proyectoId != null){
+            fraccionsList = fraccionService.getFraccionesByProyectoId(proyectoId);
+        }else{
+            fraccionsList = fraccionService.findAll();
+        }
         return ResponseEntity.ok(fraccionsList);
     }
 
@@ -54,7 +59,7 @@ public class FraccionController {
 
         //TipoColindancia.of(fraccionDTO.getTipoColindancia());
         //fraccionDTO.setTipoColindancia(TipoColindancia.LOTE);
-        Optional<ProyectoDTO> proyOp = proyectoService.findById(fraccionDTO.getProyecto().getId());
+        Optional<ProyectoDTO> proyOp = proyectoService.findById(fraccionDTO.getProyectoId());
         if(proyOp.isPresent()){
             fraccionDTO.setProyecto(proyOp.get());
         }
@@ -65,16 +70,16 @@ public class FraccionController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@RequestBody FraccionDTO proyDTO, @PathVariable("id") Long id){
+    public ResponseEntity<?> update(@RequestBody FraccionDTO fraccionDTO, @PathVariable("id") Long id){
         try {
             Optional<FraccionDTO> resultProyDTO = fraccionService.findById(id);
             if(!resultProyDTO.isPresent()) {
                 return ResponseEntity.notFound().build();
             }
             //Se convierte el fraccionDTO encontrado en update
-            //FraccionDTO proyUpdate = modelMapper.map(proyDTO, resultProyDTO.get());
+            //FraccionDTO proyUpdate = modelMapper.map(fraccionDTO, resultProyDTO.get());
 
-            return ResponseEntity.status(HttpStatus.CREATED).body(fraccionService.update(proyDTO));
+            return ResponseEntity.status(HttpStatus.CREATED).body(fraccionService.update(fraccionDTO));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().build();

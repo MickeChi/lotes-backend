@@ -18,8 +18,8 @@ public class Fraccion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "fraccion")
-    private Integer fraccion;
+    @Column(name = "lote")
+    private Integer lote;
 
     @Column(name = "numero_catastral")
     private Long numeroCatastral;

@@ -12,7 +12,7 @@ public class FraccionMaps {
 
     public static PropertyMap<Fraccion, FraccionDTO> fraccionDtoMap = new PropertyMap<Fraccion, FraccionDTO>() {
         protected void configure() {
-            //map().setStreet(source.getAddress().getStreet());
+            map().setProyectoId(source.getProyecto().getId());
             //map(source.getAddress().city, destination.city);
             //using(new FraccionCotaDTOListConverter()).map(source::getCotas, destination::setCotas);
             skip().setProyecto(null);

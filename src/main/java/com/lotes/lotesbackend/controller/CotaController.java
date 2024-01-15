@@ -30,12 +30,15 @@ public class CotaController {
     @Autowired
     CotaService cotaService;
 
-    @Autowired
-    ModelMapper modelMapper;
-
     @GetMapping
-    public ResponseEntity<?> findAll(){
-        List<CotaDTO> cotaList = cotaService.findAll();
+    public ResponseEntity<?> findAll(@RequestParam(name = "fraccionId") Long fraccionId){
+        List<CotaDTO> cotaList = new ArrayList<>();
+        if(fraccionId != null){
+            cotaList = cotaService.getCotasByFraccionId(fraccionId);
+        }else{
+            cotaList = cotaService.findAll();
+        }
+
         return ResponseEntity.ok(cotaList);
     }
 
@@ -64,8 +67,6 @@ public class CotaController {
             if(!resultCotaDTO.isPresent()) {
                 return ResponseEntity.notFound().build();
             }
-            //Se convierte el fraccionDTO encontrado en update
-            //CotaDTO proyUpdate = modelMapper.map(cotDTO, resultCotaDTO.get());
 
             return ResponseEntity.status(HttpStatus.CREATED).body(cotaService.update(cotDTO));
         } catch (Exception e) {

@@ -12,7 +12,7 @@ public class FraccionDTO {
 
 	private Long id;
 
-    private Integer fraccion;
+    private Integer lote;
 
     private Long numeroCatastral;
 

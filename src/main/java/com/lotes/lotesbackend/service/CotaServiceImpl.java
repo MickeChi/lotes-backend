@@ -1,9 +1,13 @@
 package com.lotes.lotesbackend.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.lotes.lotesbackend.dto.FraccionDTO;
+import com.lotes.lotesbackend.entity.Fraccion;
+import com.lotes.lotesbackend.entity.Proyecto;
 import com.lotes.lotesbackend.repository.FraccionRepository;
 import com.lotes.lotesbackend.utils.CotaMaps;
 import com.lotes.lotesbackend.utils.FraccionMaps;
@@ -53,18 +57,10 @@ public class CotaServiceImpl implements CotaService{
 	@Override
 	public CotaDTO save(CotaDTO cotaDto) {
 		Cota cota = this.modelMapper.map(cotaDto, Cota.class);
-		//List<Fraccion> colindancias = cotaDto.getColindancias().stream().map(c -> fraccionRepository.findById(c).get()).toList();
-		//cota.setColindancias(colindancias);
-
+		cota.setFraccion(this.fraccionRepository.findById(cotaDto.getFraccionId()).get());
+		List<Fraccion> colindancias = cotaDto.getColindanciasIds().stream().map(c -> fraccionRepository.findById(c).get()).toList();
+		cota.setColindancias(colindancias);
 		cota = this.cotaRepository.save(cota);
-
-		/*TypeMap<Cota, CotaDTO> propertyMapper = this.modelMapper.createTypeMap(Cota.class, CotaDTO.class);
-		propertyMapper.addMappings(
-				mapper -> mapper.map(src -> src.getFraccion().getId(), CotaDTO::setFraccionId)
-		);*/
-		/*propertyMapper.addMappings(
-				mapper -> mapper.map(src -> src.getColindancias().stream().map(Fraccion::getId).toList(), CotaDTO::setColindancias)
-		);*/
 
 		return this.modelMapper.map(cota, CotaDTO.class);
 	}
@@ -80,4 +76,18 @@ public class CotaServiceImpl implements CotaService{
 		return cotaDto;
 	}
 
+	@Override
+	public List<CotaDTO> getCotasByFraccionId(Long fraccionId) {
+		List<CotaDTO> respuesta = new ArrayList<>();
+		Optional<Fraccion> fracOp = this.fraccionRepository.findById(fraccionId);
+		if(fracOp.isPresent()) {
+			respuesta = this.cotaRepository.getCotasByFraccionId(fraccionId).stream()
+					.map(p-> {
+						return this.modelMapper.map(p, CotaDTO.class);
+					})
+					.collect(Collectors.toList());
+		}
+
+		return respuesta;
+	}
 }
