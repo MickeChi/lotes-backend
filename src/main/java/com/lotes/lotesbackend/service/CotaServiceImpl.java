@@ -67,13 +67,12 @@ public class CotaServiceImpl implements CotaService{
 
 	@Override
 	public CotaDTO update(CotaDTO cotaDto) {
-		Optional<Cota> fracOp = this.cotaRepository.findById(cotaDto.getId());
-		if(fracOp.isPresent()) {
-			Cota cota = this.cotaRepository.save(this.modelMapper.map(cotaDto, Cota.class));
-			cotaDto = this.modelMapper.map(cota, CotaDTO.class);
-		}
-
-		return cotaDto;
+		Cota cota = this.modelMapper.map(cotaDto, Cota.class);
+		cota.setFraccion(this.fraccionRepository.findById(cotaDto.getFraccionId()).get());
+		List<Fraccion> colindancias = cotaDto.getColindanciasIds().stream().map(c -> fraccionRepository.findById(c).get()).toList();
+		cota.setColindancias(colindancias);
+		cota = this.cotaRepository.save(cota);
+		return this.modelMapper.map(cota, CotaDTO.class);
 	}
 
 	@Override
