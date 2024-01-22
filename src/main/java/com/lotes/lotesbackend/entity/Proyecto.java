@@ -1,6 +1,8 @@
 package com.lotes.lotesbackend.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.lotes.lotesbackend.constants.Orientacion;
+import com.lotes.lotesbackend.constants.Uso;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -26,20 +28,22 @@ public class Proyecto {
     @Column(name = "municipio")
     private String municipio;
 
+    @Column(name = "localidad")
+    private String localidad;
+
     @Column(name = "subtotal")
     private BigDecimal subtotal;
 
     @Column(name = "total_fracciones")
     private Integer totalFracciones;
 
-    @Column(name = "uso")
-    private String uso;
+    private Uso uso;
 
     @Column(name = "clase")
     private String clase;
 
     @Column(name = "punto_partida")
-    private String puntoPartida;
+    private Orientacion puntoPartida;
 
     //@OneToMany(mappedBy = "proyecto", fetch = FetchType.EAGER)
     //private List<Fraccion> fracciones;

@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.lotes.lotesbackend.constants.TipoColindancia;
+import com.lotes.lotesbackend.constants.Uso;
 import lombok.Data;
 
 @Data
@@ -30,7 +31,7 @@ public class FraccionDTO {
 
     private BigDecimal valorCatastral;
 
-    private String uso;
+    private Uso uso;
 
     private String clase;
 

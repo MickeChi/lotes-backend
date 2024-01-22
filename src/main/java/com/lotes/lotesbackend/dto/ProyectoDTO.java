@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.lotes.lotesbackend.constants.Orientacion;
+import com.lotes.lotesbackend.constants.Uso;
 import lombok.Data;
 
 @Data
@@ -21,11 +23,11 @@ public class ProyectoDTO {
 
     private Integer totalFracciones;
 
-    private String uso;
+    private Uso uso;
 
     private String clase;
 
-    private String puntoPartida;
+    private Orientacion puntoPartida;
 
     //private List<FraccionDTO> fracciones;
 
