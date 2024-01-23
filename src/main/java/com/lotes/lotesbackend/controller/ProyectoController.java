@@ -2,6 +2,7 @@ package com.lotes.lotesbackend.controller;
 
 import com.ibm.icu.text.RuleBasedNumberFormat;
 import com.ibm.icu.util.ULocale;
+import com.lotes.lotesbackend.dto.CotaProyectoDTO;
 import com.lotes.lotesbackend.dto.ProyectoDTO;
 import com.lotes.lotesbackend.service.ProyectoService;
 import org.modelmapper.ModelMapper;
@@ -59,6 +60,15 @@ public class ProyectoController {
             e.printStackTrace();
             return ResponseEntity.badRequest().build();
         }
+
+    }
+    
+    @PostMapping("/cota-proyecto")
+    public ResponseEntity<?> createCotaProyecto(@RequestBody CotaProyectoDTO cotaProyectoDTO){
+    	
+    	
+    	CotaProyectoDTO cotaProyecto = proyectoService.saveCotaProyecto(cotaProyectoDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(cotaProyecto);
 
     }
 

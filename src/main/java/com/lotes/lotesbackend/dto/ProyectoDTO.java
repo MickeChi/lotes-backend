@@ -2,6 +2,7 @@ package com.lotes.lotesbackend.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.lotes.lotesbackend.constants.Orientacion;
@@ -29,7 +30,7 @@ public class ProyectoDTO {
 
     private Orientacion puntoPartida;
 
-    //private List<FraccionDTO> fracciones;
+    private List<CotaProyectoDTO> cotasProyecto = new ArrayList<>();
 
     private LocalDateTime createdAt;
 
