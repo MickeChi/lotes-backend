@@ -66,7 +66,34 @@ public class ProyectoServiceImpl implements ProyectoService{
 	public ProyectoDTO save(ProyectoDTO proyectoDto) {
 		
 		Proyecto proy = this.proyectoRepository.save(this.modelMapper.map(proyectoDto, Proyecto.class));
-		return this.modelMapper.map(proy, ProyectoDTO.class);
+		
+		List<CotaProyectoDTO> cotasProyecto =  proyectoDto.getCotasProyecto().stream().map(cp -> {
+			Fraccion frac = new Fraccion();
+			frac.setDescripcion(cp.getDescripcion());
+			frac.setProyecto(proy);
+			
+			frac = this.fraccionRepository.save(frac);
+			
+			Cota cotap = new Cota();
+			cotap.setColindancias(new ArrayList<>());
+			cotap.setFraccion(frac);
+			cotap.setMedida(cp.getMedida());
+			cotap.setOrden(cp.getOrden());
+			cotap.setOrientacion(cp.getOrientacion());
+			cotap.setTipoLinea(cp.getTipoLinea());
+			cotap = this.cotaRepository.save(cotap);
+			
+			cp.setProyectoId(frac.getProyecto().getId());
+			cp.setFraccionId(frac.getId());
+			cp.setCotaId(cotap.getId());
+			
+			return cp;
+		}).collect(Collectors.toList());
+		
+		proyectoDto = this.modelMapper.map(proy, ProyectoDTO.class);
+		proyectoDto.setCotasProyecto(cotasProyecto);
+		
+		return proyectoDto;
 	}
 
 	@Override

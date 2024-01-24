@@ -29,11 +29,6 @@ public class FraccionMaps {
             map().setFraccionId(source.getId());
             map().setDescripcion(source.getDescripcion());
             using(new ProyectoCotaDTOListConverter()).map(source.getCotas()).setDatosCota(null);
-			
-			//map().setOrden(source.getCotas().get(0).getOrden());
-			//map().setOrientacion(source.getCotas().get(0).getOrientacion());
-			//map().setTipoLinea(source.getCotas().get(0).getTipoLinea());
-            //map().setCotaId(source.getCotas().get(0).getId());
         }
     };
 
