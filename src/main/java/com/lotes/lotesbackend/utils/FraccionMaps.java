@@ -1,13 +1,12 @@
 package com.lotes.lotesbackend.utils;
 
 import com.lotes.lotesbackend.dto.CotaDTO;
-import com.lotes.lotesbackend.dto.CotaProyectoDTO;
+import com.lotes.lotesbackend.dto.FraccionExternaDTO;
 import com.lotes.lotesbackend.dto.FraccionDTO;
 import com.lotes.lotesbackend.entity.Cota;
 import com.lotes.lotesbackend.entity.Fraccion;
 import org.modelmapper.PropertyMap;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 
 public class FraccionMaps {
@@ -23,11 +22,12 @@ public class FraccionMaps {
         }
     };
     
-    public static PropertyMap<Fraccion, CotaProyectoDTO> cotaProyDtoMap = new PropertyMap<Fraccion, CotaProyectoDTO>() {
+    public static PropertyMap<Fraccion, FraccionExternaDTO> fraccionExternaDtoMap = new PropertyMap<Fraccion, FraccionExternaDTO>() {
         protected void configure() {
             map().setProyectoId(source.getProyecto().getId());
             map().setFraccionId(source.getId());
             map().setDescripcion(source.getDescripcion());
+            map().setColindanciaProyecto(source.isColindanciaProyecto());
             using(new ProyectoCotaDTOListConverter()).map(source.getCotas()).setDatosCota(null);
         }
     };

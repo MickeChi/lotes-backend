@@ -12,6 +12,8 @@ public interface FraccionRepository extends JpaRepository<Fraccion, Long> {
 
     public List<Fraccion> getFraccionsByProyectoId(Long proyectoId);
 
+    List<Fraccion> findByProyectoIdAndColindanciaProyecto(Long proyectoId, boolean colindanciaProyecto);
+
     public List<Fraccion> findByProyectoId(Long proyectoId);
 
 }

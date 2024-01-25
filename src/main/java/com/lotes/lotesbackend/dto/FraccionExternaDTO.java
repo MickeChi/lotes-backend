@@ -2,8 +2,6 @@ package com.lotes.lotesbackend.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Set;
 
 import com.lotes.lotesbackend.constants.Orientacion;
 import com.lotes.lotesbackend.constants.TipoLinea;
@@ -11,7 +9,7 @@ import com.lotes.lotesbackend.constants.TipoLinea;
 import lombok.Data;
 
 @Data
-public class CotaProyectoDTO {
+public class FraccionExternaDTO {
 
     private Long fraccionId;
     
@@ -28,6 +26,8 @@ public class CotaProyectoDTO {
     private Orientacion orientacion;
     
     private BigDecimal medida;
+
+    boolean colindanciaProyecto;
     
     private LocalDateTime createdAt;
 
@@ -39,7 +39,6 @@ public class CotaProyectoDTO {
     	this.medida = cotaDto.getMedida();
     	this.orden = cotaDto.getOrden();
     	this.cotaId = cotaDto.getId();
-    	
     };
 
 

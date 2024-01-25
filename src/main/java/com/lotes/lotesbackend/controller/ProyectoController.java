@@ -2,7 +2,7 @@ package com.lotes.lotesbackend.controller;
 
 import com.ibm.icu.text.RuleBasedNumberFormat;
 import com.ibm.icu.util.ULocale;
-import com.lotes.lotesbackend.dto.CotaProyectoDTO;
+import com.lotes.lotesbackend.dto.FraccionExternaDTO;
 import com.lotes.lotesbackend.dto.ProyectoDTO;
 import com.lotes.lotesbackend.service.ProyectoService;
 import org.modelmapper.ModelMapper;
@@ -63,12 +63,12 @@ public class ProyectoController {
 
     }
     
-    @PostMapping("/cota-proyecto")
-    public ResponseEntity<?> createCotaProyecto(@RequestBody CotaProyectoDTO cotaProyectoDTO){
+    @PostMapping("/fraccion-externa")
+    public ResponseEntity<?> createFraccionExterna(@RequestBody FraccionExternaDTO fraccionExternaDTO){
     	
     	
-    	CotaProyectoDTO cotaProyecto = proyectoService.saveCotaProyecto(cotaProyectoDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(cotaProyecto);
+    	FraccionExternaDTO fraccionExterna = proyectoService.saveFraccionExterna(fraccionExternaDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(fraccionExterna);
 
     }
 

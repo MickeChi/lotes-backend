@@ -11,7 +11,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.lotes.lotesbackend.dto.CotaProyectoDTO;
+import com.lotes.lotesbackend.dto.FraccionExternaDTO;
 import com.lotes.lotesbackend.dto.ProyectoDTO;
 import com.lotes.lotesbackend.entity.Cota;
 import com.lotes.lotesbackend.entity.Fraccion;
@@ -36,7 +36,7 @@ public class ProyectoServiceImpl implements ProyectoService{
 
 	public ProyectoServiceImpl() {
 		this.modelMapper = GenericMapper.getMapper();
-		this.modelMapper.addMappings(FraccionMaps.cotaProyDtoMap);
+		this.modelMapper.addMappings(FraccionMaps.fraccionExternaDtoMap);
 
 	}
 
@@ -53,10 +53,10 @@ public class ProyectoServiceImpl implements ProyectoService{
 		Optional<ProyectoDTO> proyectoDtoOp = Optional.empty();
 		Optional<Proyecto> proyOp = this.proyectoRepository.findById(id);
 		if(proyOp.isPresent()) {
-			List<CotaProyectoDTO> listCotasProy = this.fraccionRepository.getFraccionsByProyectoId(proyOp.get().getId())
-					.stream().map(p-> this.modelMapper.map(p, CotaProyectoDTO.class)).collect(Collectors.toList());
+			List<FraccionExternaDTO> listFraccionesExt = this.fraccionRepository.findByProyectoIdAndColindanciaProyecto(proyOp.get().getId(), true)
+					.stream().map(p-> this.modelMapper.map(p, FraccionExternaDTO.class)).collect(Collectors.toList());
 			ProyectoDTO proyDto = this.modelMapper.map(proyOp.get(), ProyectoDTO.class);
-			proyDto.setCotasProyecto(listCotasProy);
+			proyDto.setFraccionesExternas(listFraccionesExt);
 			proyectoDtoOp = Optional.of(proyDto); 
 		}
 		return proyectoDtoOp;
@@ -67,7 +67,7 @@ public class ProyectoServiceImpl implements ProyectoService{
 		
 		Proyecto proy = this.proyectoRepository.save(this.modelMapper.map(proyectoDto, Proyecto.class));
 		
-		List<CotaProyectoDTO> cotasProyecto =  proyectoDto.getCotasProyecto().stream().map(cp -> {
+		List<FraccionExternaDTO> fraccionExternasDto =  proyectoDto.getFraccionesExternas().stream().map(cp -> {
 			Fraccion frac = new Fraccion();
 			frac.setDescripcion(cp.getDescripcion());
 			frac.setProyecto(proy);
@@ -91,7 +91,7 @@ public class ProyectoServiceImpl implements ProyectoService{
 		}).collect(Collectors.toList());
 		
 		proyectoDto = this.modelMapper.map(proy, ProyectoDTO.class);
-		proyectoDto.setCotasProyecto(cotasProyecto);
+		proyectoDto.setFraccionesExternas(fraccionExternasDto);
 		
 		return proyectoDto;
 	}
@@ -110,11 +110,11 @@ public class ProyectoServiceImpl implements ProyectoService{
 	}
 
 	@Override
-	public CotaProyectoDTO saveCotaProyecto(CotaProyectoDTO cotaProyectoDto) {
-		Optional<Proyecto> proyOp = this.proyectoRepository.findById(cotaProyectoDto.getProyectoId());
+	public FraccionExternaDTO saveFraccionExterna(FraccionExternaDTO fraccionExternaDto) {
+		Optional<Proyecto> proyOp = this.proyectoRepository.findById(fraccionExternaDto.getProyectoId());
 		if(proyOp.isPresent()) {
 			Fraccion frac = new Fraccion();
-			frac.setDescripcion(cotaProyectoDto.getDescripcion());
+			frac.setDescripcion(fraccionExternaDto.getDescripcion());
 			frac.setProyecto(proyOp.get());
 			
 			frac = this.fraccionRepository.save(frac);
@@ -122,17 +122,17 @@ public class ProyectoServiceImpl implements ProyectoService{
 			Cota cotap = new Cota();
 			cotap.setColindancias(new ArrayList<>());
 			cotap.setFraccion(frac);
-			cotap.setMedida(cotaProyectoDto.getMedida());
-			cotap.setOrden(cotaProyectoDto.getOrden());
-			cotap.setOrientacion(cotaProyectoDto.getOrientacion());
-			cotap.setTipoLinea(cotaProyectoDto.getTipoLinea());
+			cotap.setMedida(fraccionExternaDto.getMedida());
+			cotap.setOrden(fraccionExternaDto.getOrden());
+			cotap.setOrientacion(fraccionExternaDto.getOrientacion());
+			cotap.setTipoLinea(fraccionExternaDto.getTipoLinea());
 			cotap = this.cotaRepository.save(cotap);
 			
-			cotaProyectoDto.setProyectoId(frac.getProyecto().getId());
-			cotaProyectoDto.setFraccionId(frac.getId());
-			cotaProyectoDto.setCotaId(cotap.getId());
+			fraccionExternaDto.setProyectoId(frac.getProyecto().getId());
+			fraccionExternaDto.setFraccionId(frac.getId());
+			fraccionExternaDto.setCotaId(cotap.getId());
 			
-			return cotaProyectoDto; 			
+			return fraccionExternaDto;
 		}
 		
 		
