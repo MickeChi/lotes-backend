@@ -71,7 +71,9 @@ public class ProyectoServiceImpl implements ProyectoService{
 			Fraccion frac = new Fraccion();
 			frac.setDescripcion(cp.getDescripcion());
 			frac.setProyecto(proy);
-			
+			frac.setColindanciaProyecto(cp.isColindanciaProyecto());
+
+
 			frac = this.fraccionRepository.save(frac);
 			
 			Cota cotap = new Cota();
@@ -102,7 +104,48 @@ public class ProyectoServiceImpl implements ProyectoService{
 		Optional<Proyecto> proyOp = this.proyectoRepository.findById(proyectoDto.getId());
 		if(proyOp.isPresent()) {
 			 Proyecto proy = this.proyectoRepository.save(this.modelMapper.map(proyectoDto, Proyecto.class));
-			 proyectoDto = this.modelMapper.map(proy, ProyectoDTO.class);
+			 //proyectoDto = this.modelMapper.map(proy, ProyectoDTO.class);
+
+			List<FraccionExternaDTO> fraccionExternasDto = proyectoDto.getFraccionesExternas().stream().map(cp -> {
+				Fraccion frac = new Fraccion();
+				if(cp.getFraccionId() != null){
+					Optional<Fraccion> fracOp = this.fraccionRepository.findById(cp.getFraccionId());
+					if (fracOp.isPresent()){
+						frac = fracOp.get();
+					}
+				}
+				frac.setDescripcion(cp.getDescripcion());
+				frac.setProyecto(proy);
+				frac.setColindanciaProyecto(cp.isColindanciaProyecto());
+
+				frac = this.fraccionRepository.save(frac);
+
+				Cota cotap = new Cota();
+				if(cp.getCotaId() != null){
+					Optional<Cota> cotaOp = this.cotaRepository.findById(cp.getCotaId());
+					if (cotaOp.isPresent()){
+						cotap = cotaOp.get();
+					}
+				}
+
+				cotap.setColindancias(new ArrayList<>());
+				cotap.setFraccion(frac);
+				cotap.setMedida(cp.getMedida());
+				cotap.setOrden(cp.getOrden());
+				cotap.setOrientacion(cp.getOrientacion());
+				cotap.setTipoLinea(cp.getTipoLinea());
+				cotap = this.cotaRepository.save(cotap);
+
+				cp.setProyectoId(frac.getProyecto().getId());
+				cp.setFraccionId(frac.getId());
+				cp.setCotaId(cotap.getId());
+
+				return cp;
+			}).collect(Collectors.toList());
+
+			proyectoDto = this.modelMapper.map(proy, ProyectoDTO.class);
+			proyectoDto.setFraccionesExternas(fraccionExternasDto);
+
 		}		
 		
 		return proyectoDto;
