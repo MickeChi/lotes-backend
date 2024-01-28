@@ -4,6 +4,9 @@ import com.ibm.icu.text.RuleBasedNumberFormat;
 import com.ibm.icu.util.ULocale;
 import com.lotes.lotesbackend.dto.FraccionExternaDTO;
 import com.lotes.lotesbackend.dto.ProyectoDTO;
+import com.lotes.lotesbackend.dto.ProyectoTextoDTO;
+import com.lotes.lotesbackend.service.CotaService;
+import com.lotes.lotesbackend.service.FraccionService;
 import com.lotes.lotesbackend.service.ProyectoService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +20,13 @@ import java.util.*;
 @RequestMapping("/proyecto")
 public class ProyectoController {
     @Autowired
+    FraccionService fraccionService;
+
+    @Autowired
     ProyectoService proyectoService;
+
+    @Autowired
+    CotaService cotaService;
 
     @Autowired
     ModelMapper modelMapper;
@@ -62,12 +71,12 @@ public class ProyectoController {
         }
 
     }
-    
+
     @PostMapping("/fraccion-externa")
     public ResponseEntity<?> createFraccionExterna(@RequestBody FraccionExternaDTO fraccionExternaDTO){
-    	
-    	
-    	FraccionExternaDTO fraccionExterna = proyectoService.saveFraccionExterna(fraccionExternaDTO);
+
+
+        FraccionExternaDTO fraccionExterna = proyectoService.saveFraccionExterna(fraccionExternaDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(fraccionExterna);
 
     }
@@ -92,23 +101,16 @@ public class ProyectoController {
 
     }
 
-    @GetMapping("/generate-fracciones-doc/{id}")
-    public ResponseEntity<?> generateFraccionesDoc(@PathVariable("id") Long id){
+    @GetMapping("/generate-proyecto-doc/{proyectoId}")
+    public ResponseEntity<?> generateFraccionesDoc(@PathVariable("proyectoId") Long proyectoId){
 
-        ULocale to = new ULocale("es_MX");
-        String numberTxt = "";
-        try {
-            /*Double number = Double.parseDouble(numero);
-            RuleBasedNumberFormat rbnf = new RuleBasedNumberFormat(to, RuleBasedNumberFormat.SPELLOUT);
-            numberTxt = rbnf.format(number);*/
-            Map<String, String> resp = new HashMap<>();
-//            resp.put(numero, numberTxt);
-            return ResponseEntity.ok(resp);
-
-        } catch(Throwable t) {
-            return ResponseEntity.badRequest().build();
+        Optional<ProyectoDTO> proyectoOp = proyectoService.findById(proyectoId);
+        if(!proyectoOp.isPresent()) {
+            return ResponseEntity.notFound().build();
         }
+        ProyectoTextoDTO proyectoTexto = this.proyectoService.generateFraccionesText(proyectoId);
 
+        return ResponseEntity.ok(proyectoTexto);
 
     }
 }
