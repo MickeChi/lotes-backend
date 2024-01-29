@@ -3,8 +3,6 @@ package com.lotes.lotesbackend.service;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import com.ibm.icu.text.RuleBasedNumberFormat;
-import com.ibm.icu.util.ULocale;
 import com.lotes.lotesbackend.dto.FraccionTextoDTO;
 import com.lotes.lotesbackend.dto.ProyectoTextoDTO;
 import com.lotes.lotesbackend.utils.FraccionMaps;
@@ -12,7 +10,6 @@ import com.lotes.lotesbackend.utils.GenericMapper;
 import com.lotes.lotesbackend.utils.NumberUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.lotes.lotesbackend.dto.FraccionExternaDTO;
@@ -108,7 +105,6 @@ public class ProyectoServiceImpl implements ProyectoService{
 		Optional<Proyecto> proyOp = this.proyectoRepository.findById(proyectoDto.getId());
 		if(proyOp.isPresent()) {
 			Proyecto proy = this.proyectoRepository.save(this.modelMapper.map(proyectoDto, Proyecto.class));
-			//proyectoDto = this.modelMapper.map(proy, ProyectoDTO.class);
 
 			List<FraccionExternaDTO> fraccionExternasDto = proyectoDto.getFraccionesExternas().stream().map(cp -> {
 				Fraccion frac = new Fraccion();

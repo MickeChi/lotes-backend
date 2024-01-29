@@ -1,7 +1,7 @@
 package com.lotes.lotesbackend.controller;
 
 import com.lotes.lotesbackend.constants.Orientacion;
-import com.lotes.lotesbackend.constants.TipoColindancia;
+import com.lotes.lotesbackend.constants.TipoFraccion;
 import com.lotes.lotesbackend.constants.TipoLinea;
 import com.lotes.lotesbackend.dto.CotaDTO;
 import com.lotes.lotesbackend.dto.FraccionDTO;

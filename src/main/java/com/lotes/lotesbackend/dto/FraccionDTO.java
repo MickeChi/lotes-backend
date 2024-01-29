@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.lotes.lotesbackend.constants.TipoColindancia;
+import com.lotes.lotesbackend.constants.TipoFraccion;
 import com.lotes.lotesbackend.constants.Uso;
 import lombok.Data;
 
@@ -41,8 +41,7 @@ public class FraccionDTO {
 
     private List<CotaDTO> cotas;
 
-    //Datos Colindancia
-    private TipoColindancia tipoColindancia;
+    private TipoFraccion tipoFraccion;
 
     boolean colindanciaProyecto;
 

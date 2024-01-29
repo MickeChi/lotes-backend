@@ -1,7 +1,6 @@
 package com.lotes.lotesbackend.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.lotes.lotesbackend.constants.TipoColindancia;
+import com.lotes.lotesbackend.constants.TipoFraccion;
 import com.lotes.lotesbackend.constants.Uso;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -58,8 +57,7 @@ public class Fraccion {
     @OneToMany(mappedBy = "fraccion", fetch = FetchType.EAGER)
     private List<Cota> cotas;
 
-    //Datos Colindancia
-    private TipoColindancia tipoColindancia;
+    private TipoFraccion tipoFraccion;
 
     @Column(name = "colindanciaProyecto")
     boolean colindanciaProyecto;
