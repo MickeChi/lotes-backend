@@ -1,5 +1,7 @@
 package com.lotes.lotesbackend.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ibm.icu.text.RuleBasedNumberFormat;
 import com.ibm.icu.util.ULocale;
 import com.lotes.lotesbackend.dto.FraccionExternaDTO;
@@ -8,11 +10,14 @@ import com.lotes.lotesbackend.dto.ProyectoTextoDTO;
 import com.lotes.lotesbackend.service.CotaService;
 import com.lotes.lotesbackend.service.FraccionService;
 import com.lotes.lotesbackend.service.ProyectoService;
+import jakarta.annotation.Nullable;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 
@@ -48,21 +53,34 @@ public class ProyectoController {
     }
 
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody ProyectoDTO proyectoDTO){
+    public ResponseEntity<?> create(
+            @RequestParam("proyecto") String proyectoJson,
+            @Nullable @RequestParam(value = "documento",required = false) MultipartFile documento
+            //@RequestBody ProyectoDTO proyectoDTO
+    ) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        ProyectoDTO proyectoDTO = mapper.readValue(proyectoJson, ProyectoDTO.class);
+
         ProyectoDTO proyecto = proyectoService.save(proyectoDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(proyecto);
 
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<?> update(@RequestBody ProyectoDTO proyDTO, @PathVariable("id") Long id){
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> update(
+            @PathVariable("id") Long id,
+            @RequestParam("proyecto") String proyectoJson,
+            @Nullable @RequestParam(value = "documento",required = false) MultipartFile documento
+            //@RequestBody ProyectoDTO proyDTO, @PathVariable("id") Long id
+    ){
         try {
+
             Optional<ProyectoDTO> resultProyDTO = proyectoService.findById(id);
             if(!resultProyDTO.isPresent()) {
                 return ResponseEntity.notFound().build();
             }
-            //Se convierte el proyectoDTO encontrado en update
-            //ProyectoDTO proyUpdate = modelMapper.map(proyDTO, resultProyDTO.get());
+            ObjectMapper mapper = new ObjectMapper();
+            ProyectoDTO proyDTO = mapper.readValue(proyectoJson, ProyectoDTO.class);
 
             return ResponseEntity.status(HttpStatus.CREATED).body(proyectoService.update(proyDTO));
         } catch (Exception e) {

@@ -30,6 +30,8 @@ public class ProyectoDTO {
 
     private Orientacion puntoPartida;
 
+    private String documento;
+
     private List<FraccionExternaDTO> fraccionesExternas = new ArrayList<>();
 
     private LocalDateTime createdAt;
