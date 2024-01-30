@@ -7,14 +7,13 @@ import java.nio.file.Path;
 import java.util.stream.Stream;
 
 public interface FileStorageService {
+	//https://www.bezkoder.com/spring-boot-file-upload/
 
-        void init();
+	String save(MultipartFile file);
 
-        void save(MultipartFile file);
+	Resource load(String filename);
 
-        Resource load(String filename);
-                
-        void deleteAll();
-        
-        Stream<Path> loadAll();
+	void deleteAll();
+
+	Stream<Path> loadAll();
 }

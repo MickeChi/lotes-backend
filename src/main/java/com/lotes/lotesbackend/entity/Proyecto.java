@@ -1,6 +1,5 @@
 package com.lotes.lotesbackend.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.lotes.lotesbackend.constants.Orientacion;
 import com.lotes.lotesbackend.constants.Uso;
 import jakarta.persistence.*;
@@ -10,7 +9,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @Entity(name = "proyectos")
