@@ -72,8 +72,10 @@ public class ProyectoController {
 		ObjectMapper mapper = new ObjectMapper();
 		ProyectoDTO proyectoDTO = mapper.readValue(proyectoJson, ProyectoDTO.class);
 		
-		String fileName = this.storageService.save(documento);
-		proyectoDTO.setDocumento(fileName);
+		if (!documento.isEmpty()) {
+			String fileName = this.storageService.save(documento);			
+			proyectoDTO.setDocumento(fileName);
+		}		
 		
 		ProyectoDTO proyecto = proyectoService.save(proyectoDTO);
 		return ResponseEntity.status(HttpStatus.CREATED).body(proyecto);
@@ -94,8 +96,10 @@ public class ProyectoController {
 			ObjectMapper mapper = new ObjectMapper();
 			ProyectoDTO proyDTO = mapper.readValue(proyectoJson, ProyectoDTO.class);
 			
-			String fileName = this.storageService.save(documento);			
-			proyDTO.setDocumento(fileName);
+			if (!documento.isEmpty()) {
+				String fileName = this.storageService.save(documento);			
+				proyDTO.setDocumento(fileName);
+			}
 
 			//return ResponseEntity.status(HttpStatus.CREATED).body(new ProyectoDTO());
 			return ResponseEntity.status(HttpStatus.CREATED).body(proyectoService.update(proyDTO));
