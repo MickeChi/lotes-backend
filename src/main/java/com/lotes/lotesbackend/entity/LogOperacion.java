@@ -1,7 +1,5 @@
 package com.lotes.lotesbackend.entity;
 
-import com.lotes.lotesbackend.constants.Orientacion;
-import com.lotes.lotesbackend.constants.TipoLinea;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -9,7 +7,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @Entity(name = "log_operaciones")
