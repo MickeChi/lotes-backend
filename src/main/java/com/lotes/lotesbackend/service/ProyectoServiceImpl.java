@@ -3,6 +3,7 @@ package com.lotes.lotesbackend.service;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.lotes.lotesbackend.constants.TipoFraccion;
 import com.lotes.lotesbackend.dto.FraccionTextoDTO;
 import com.lotes.lotesbackend.dto.ProyectoTextoDTO;
 import com.lotes.lotesbackend.utils.FraccionMaps;
@@ -236,6 +237,8 @@ public class ProyectoServiceImpl implements ProyectoService{
 								.replaceAll("V_PUNTO_PARTIDA", py.getPuntoPartida().getNombre().toLowerCase())
 				);
 
+
+
 				int contCota = 1;
 				int cotasSize = cotas.size();
 				for (Cota c : cotas){
@@ -250,10 +253,13 @@ public class ProyectoServiceImpl implements ProyectoService{
 					Fraccion colindancia = colindanciasList.get(0);
 					String loteDescripcion = null;
 					if(colindancia.isColindanciaProyecto()){
-						loteDescripcion = colindancia.getDescripcion();
+						loteDescripcion = NumberUtils.allNumbersToText(colindancia.getDescripcion());
 					}else{
-						loteDescripcion = "tablaje catastral " + NumberUtils.numeroATexto(colindancia.getTablaje().toString())
-								+ " resultante de la presente división";
+						loteDescripcion = "tablaje catastral " + NumberUtils.numeroATexto(colindancia.getTablaje().toString()) + " ";
+						if(colindancia.getTipoFraccion() != null && colindancia.getTipoFraccion().equals(TipoFraccion.VIALIDAD)){
+							loteDescripcion += "(" + colindancia.getTipoFraccion().getTipo() + ") ";
+						}
+						loteDescripcion += "resultante de la presente división";
 					}
 
 					String medidaTxt = NumberUtils.numeroATexto(c.getMedida().toString());
@@ -264,6 +270,7 @@ public class ProyectoServiceImpl implements ProyectoService{
 									.replaceAll("V_ORIENTACION", c.getOrientacion().getNombre().toLowerCase())
 									.replaceAll("V_TIPO_LINEA", c.getTipoLinea().getNombre().toLowerCase())
 									.replaceAll("V_LOTE_DESCRIPCION", loteDescripcion)
+									.replaceAll("V_MEDIDA", c.getMedida().toString())
 									.replaceAll("V_MEDIDA", c.getMedida().toString())
 									.replaceAll("V_TXT_MEDIDA", medidaTxt)
 					);

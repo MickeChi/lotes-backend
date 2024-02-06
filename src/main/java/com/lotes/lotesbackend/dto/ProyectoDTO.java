@@ -1,6 +1,7 @@
 package com.lotes.lotesbackend.dto;
 
 import java.math.BigDecimal;
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +21,8 @@ public class ProyectoDTO {
 
     private String municipio;
 
+    private String localidad;
+
     private BigDecimal subtotal;
 
     private Integer totalFracciones;
@@ -30,7 +33,7 @@ public class ProyectoDTO {
 
     private Orientacion puntoPartida;
 
-    private String documento;
+    private String nombreDocumento;
 
     private List<FraccionExternaDTO> fraccionesExternas = new ArrayList<>();
 

@@ -43,8 +43,8 @@ public class Proyecto {
     @Column(name = "punto_partida")
     private Orientacion puntoPartida;
     
-    @Column(name = "documento")
-    private String documento;
+    @Column(name = "nombre_documento")
+    private String nombreDocumento;
 
     //@OneToMany(mappedBy = "proyecto", fetch = FetchType.EAGER)
     //private List<Fraccion> fracciones;

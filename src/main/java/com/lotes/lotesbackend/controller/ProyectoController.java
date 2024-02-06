@@ -71,10 +71,10 @@ public class ProyectoController {
 			) throws JsonProcessingException {
 		ObjectMapper mapper = new ObjectMapper();
 		ProyectoDTO proyectoDTO = mapper.readValue(proyectoJson, ProyectoDTO.class);
-		
-		if (!documento.isEmpty()) {
-			String fileName = this.storageService.save(documento);			
-			proyectoDTO.setDocumento(fileName);
+
+		if (documento != null && !documento.isEmpty()) {
+			String fileName = this.storageService.save(documento);
+			proyectoDTO.setNombreDocumento(fileName);
 		}		
 		
 		ProyectoDTO proyecto = proyectoService.save(proyectoDTO);
@@ -96,9 +96,9 @@ public class ProyectoController {
 			ObjectMapper mapper = new ObjectMapper();
 			ProyectoDTO proyDTO = mapper.readValue(proyectoJson, ProyectoDTO.class);
 			
-			if (!documento.isEmpty()) {
-				String fileName = this.storageService.save(documento);			
-				proyDTO.setDocumento(fileName);
+			if (documento != null && !documento.isEmpty()) {
+				String fileName = this.storageService.save(documento);
+				proyDTO.setNombreDocumento(fileName);
 			}
 
 			//return ResponseEntity.status(HttpStatus.CREATED).body(new ProyectoDTO());
