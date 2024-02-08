@@ -1,6 +1,7 @@
 package com.lotes.lotesbackend.dto;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -22,8 +23,16 @@ public class CotaDTO {
     private BigDecimal medida;
     
     private FraccionDTO fraccion;
-    
+
+    private Long fraccionId;
+
     private List<FraccionDTO> colindancias;
+
+    private List<Long> colindanciasIds;
+
+    private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
 
 
 }

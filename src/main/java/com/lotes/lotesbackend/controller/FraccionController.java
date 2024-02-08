@@ -1,7 +1,7 @@
 package com.lotes.lotesbackend.controller;
 
 import com.lotes.lotesbackend.constants.Orientacion;
-import com.lotes.lotesbackend.constants.TipoColindancia;
+import com.lotes.lotesbackend.constants.TipoFraccion;
 import com.lotes.lotesbackend.constants.TipoLinea;
 import com.lotes.lotesbackend.dto.CotaDTO;
 import com.lotes.lotesbackend.dto.FraccionDTO;
@@ -34,8 +34,13 @@ public class FraccionController {
     ModelMapper modelMapper;
 
     @GetMapping
-    public ResponseEntity<?> findAll(){
-        List<FraccionDTO> fraccionsList = fraccionService.findAll();
+    public ResponseEntity<?> findAll(@RequestParam(name = "proyectoId") Long proyectoId){
+        List<FraccionDTO> fraccionsList = new ArrayList<>();
+        if(proyectoId != null){
+            fraccionsList = fraccionService.getFraccionesByProyectoId(proyectoId);
+        }else{
+            fraccionsList = fraccionService.findAll();
+        }
         return ResponseEntity.ok(fraccionsList);
     }
 
@@ -52,66 +57,29 @@ public class FraccionController {
     @PostMapping
     public ResponseEntity<?> create(@RequestBody FraccionDTO fraccionDTO){
 
-        FraccionDTO frac = new FraccionDTO();
-        frac.setFraccion(1);
-        frac.setColonia("dos por 3");
-        frac.setClase("lote rustico");
-        frac.setDescripcion("sdfs dfds wervef er er e");
-        frac.setFinca("merida");
-        frac.setTipoColindancia(TipoColindancia.LOTE);
-        Optional<ProyectoDTO> proyOp = proyectoService.findById(1L);
+        //TipoColindancia.of(fraccionDTO.getTipoColindancia());
+        //fraccionDTO.setTipoColindancia(TipoColindancia.LOTE);
+        Optional<ProyectoDTO> proyOp = proyectoService.findById(fraccionDTO.getProyectoId());
         if(proyOp.isPresent()){
             fraccionDTO.setProyecto(proyOp.get());
         }
 
-        frac = fraccionService.save(frac);
-
-        FraccionDTO frac2 = new FraccionDTO();
-        frac2.setFraccion(2);
-        frac2.setColonia("dos por 3");
-        frac2.setClase("lote rustico");
-        frac2.setDescripcion("sdfs dfds wervef er er e");
-        frac2.setFinca("merida");
-        frac2.setTipoColindancia(TipoColindancia.LOTE);
-        if(proyOp.isPresent()){
-            frac2.setProyecto(proyOp.get());
-        }
-        frac2 = fraccionService.save(frac2);
-
-        /*
-        CotaDTO cota = new CotaDTO();
-        cota.setFraccion(frac); //Fraccion a la que pertenece
-        cota.setOrden(1);
-        cota.setOrientacion(Orientacion.ESTE);
-        cota.setMedida(new BigDecimal(19.5));
-        cota.setTipoLinea(TipoLinea.RECTA);
-
-        List<FraccionDTO> colindancias = new ArrayList<>();
-        colindancias.add(frac2);
-        cota.setColindancias(colindancias);
-
-        cota = cotaService.save(cota);
-        List<CotaDTO> cotas = new ArrayList<>();
-        cotas.add(cota);
-        frac.setCotas(cotas);
-
-         */
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(frac);
+        fraccionDTO = fraccionService.save(fraccionDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(fraccionDTO);
 
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@RequestBody FraccionDTO proyDTO, @PathVariable("id") Long id){
+    public ResponseEntity<?> update(@RequestBody FraccionDTO fraccionDTO, @PathVariable("id") Long id){
         try {
             Optional<FraccionDTO> resultProyDTO = fraccionService.findById(id);
             if(!resultProyDTO.isPresent()) {
                 return ResponseEntity.notFound().build();
             }
             //Se convierte el fraccionDTO encontrado en update
-            //FraccionDTO proyUpdate = modelMapper.map(proyDTO, resultProyDTO.get());
+            //FraccionDTO proyUpdate = modelMapper.map(fraccionDTO, resultProyDTO.get());
 
-            return ResponseEntity.status(HttpStatus.CREATED).body(fraccionService.update(proyDTO));
+            return ResponseEntity.status(HttpStatus.CREATED).body(fraccionService.update(fraccionDTO));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().build();

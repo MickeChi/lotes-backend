@@ -1,9 +1,13 @@
 package com.lotes.lotesbackend.dto;
 
 import java.math.BigDecimal;
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
+import com.lotes.lotesbackend.constants.Orientacion;
+import com.lotes.lotesbackend.constants.Uso;
 import lombok.Data;
 
 @Data
@@ -11,21 +15,27 @@ public class ProyectoDTO {
 	
     private Long id;
 
+    private String titulo;
+
     private String estado;
 
     private String municipio;
+
+    private String localidad;
 
     private BigDecimal subtotal;
 
     private Integer totalFracciones;
 
-    private String uso;
+    private Uso uso;
 
     private String clase;
 
-    private String puntoPartida;
+    private Orientacion puntoPartida;
 
-    //private List<FraccionDTO> fracciones;
+    private String nombreDocumento;
+
+    private List<FraccionExternaDTO> fraccionesExternas = new ArrayList<>();
 
     private LocalDateTime createdAt;
 
