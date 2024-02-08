@@ -5,19 +5,19 @@ import java.util.stream.Stream;
 import lombok.Getter;
 
 @Getter
-public enum TipoColindancia {
+public enum TipoFraccion {
 	PARCELA("Parcela"), VIALIDAD("Vialidad"), LOTE("Lote");
 	
 	private String tipo;
 	
-	private TipoColindancia(String tipo) {
+	private TipoFraccion(String tipo) {
 		this.tipo = tipo;
 	}
 	
-	public static TipoColindancia of(String codigo) {
+	public static TipoFraccion of(String codigo) {
         if (codigo == null)
             return null;
-        return Stream.of(TipoColindancia.values())
+        return Stream.of(TipoFraccion.values())
                 .filter(t -> t.toString().equals(codigo))
                 .findFirst().orElseThrow(IllegalArgumentException::new);
     }

@@ -1,14 +1,15 @@
 package com.lotes.lotesbackend.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.lotes.lotesbackend.constants.Orientacion;
 import com.lotes.lotesbackend.constants.TipoLinea;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 @Data
 @Entity(name = "cotas")
@@ -37,5 +38,11 @@ public class Cota {
             joinColumns = @JoinColumn(name = "cota_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "fraccion_id", referencedColumnName = "id"))
     private List<Fraccion> colindancias;
+
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
 
 }

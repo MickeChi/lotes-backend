@@ -1,11 +1,16 @@
 package com.lotes.lotesbackend.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.lotes.lotesbackend.entity.Proyecto;
+import com.lotes.lotesbackend.repository.ProyectoRepository;
+import com.lotes.lotesbackend.utils.FraccionMaps;
+import com.lotes.lotesbackend.utils.GenericMapper;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,9 +23,16 @@ public class FraccionServiceImpl implements FraccionService{
 	
 	@Autowired
 	FraccionRepository fraccionRepository;
-	
+
 	@Autowired
-	ModelMapper modelMapper;
+	ProyectoRepository proyectoRepository;
+	
+	private final ModelMapper modelMapper;
+
+	public FraccionServiceImpl() {
+		this.modelMapper = GenericMapper.getMapper();
+		this.modelMapper.addMappings(FraccionMaps.fraccionDtoMap);
+	}
 
 	@Override
 	public List<FraccionDTO> findAll() {
@@ -56,11 +68,28 @@ public class FraccionServiceImpl implements FraccionService{
 	public FraccionDTO update(FraccionDTO fraccionDto) {
 		Optional<Fraccion> fracOp = this.fraccionRepository.findById(fraccionDto.getId());
 		if(fracOp.isPresent()) {
-			Fraccion proy = this.fraccionRepository.save(this.modelMapper.map(fraccionDto, Fraccion.class));
-			 fraccionDto = this.modelMapper.map(proy, FraccionDTO.class);
+			Fraccion fraccionSave = this.modelMapper.map(fraccionDto, Fraccion.class);
+			Proyecto proy = this.proyectoRepository.findById(fraccionDto.getProyectoId()).get();
+			fraccionSave.setProyecto(proy);
+			fraccionSave = this.fraccionRepository.save(fraccionSave);
+			fraccionDto = this.modelMapper.map(fraccionSave, FraccionDTO.class);
 		}		
 		
 		return fraccionDto;
 	}
 
+	@Override
+	public List<FraccionDTO> getFraccionesByProyectoId(Long proyectoId) {
+		List<FraccionDTO> respuesta = new ArrayList<>();
+		Optional<Proyecto> proyOp = this.proyectoRepository.findById(proyectoId);
+		if(proyOp.isPresent()) {
+			respuesta = this.fraccionRepository.getFraccionsByProyectoId(proyectoId).stream()
+					.map(p-> {
+						return this.modelMapper.map(p, FraccionDTO.class);
+					})
+					.collect(Collectors.toList());
+		}
+
+		return respuesta;
+	}
 }
