@@ -3,9 +3,12 @@ package com.lotes.lotesbackend.service;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.lotes.lotesbackend.constants.TipoEntidad;
 import com.lotes.lotesbackend.constants.TipoFraccion;
+import com.lotes.lotesbackend.constants.TipoOperacion;
 import com.lotes.lotesbackend.dto.FraccionTextoDTO;
 import com.lotes.lotesbackend.dto.ProyectoTextoDTO;
+import com.lotes.lotesbackend.repository.OperacionRepository;
 import com.lotes.lotesbackend.utils.FraccionMaps;
 import com.lotes.lotesbackend.utils.GenericMapper;
 import com.lotes.lotesbackend.utils.NumberUtils;
@@ -21,6 +24,7 @@ import com.lotes.lotesbackend.entity.Proyecto;
 import com.lotes.lotesbackend.repository.CotaRepository;
 import com.lotes.lotesbackend.repository.FraccionRepository;
 import com.lotes.lotesbackend.repository.ProyectoRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProyectoServiceImpl implements ProyectoService{
@@ -33,6 +37,9 @@ public class ProyectoServiceImpl implements ProyectoService{
 
 	@Autowired
 	CotaRepository cotaRepository;
+
+	@Autowired
+	private OperacionRepository operacionRepository;
 
 	private final ModelMapper modelMapper;
 
@@ -65,6 +72,7 @@ public class ProyectoServiceImpl implements ProyectoService{
 	}
 
 	@Override
+	@Transactional
 	public ProyectoDTO save(ProyectoDTO proyectoDto) {
 
 		Proyecto proy = this.proyectoRepository.save(this.modelMapper.map(proyectoDto, Proyecto.class));
@@ -94,12 +102,15 @@ public class ProyectoServiceImpl implements ProyectoService{
 			return cp;
 		}).collect(Collectors.toList());
 
+		this.operacionRepository.saveOperacion(TipoOperacion.CREATE, TipoEntidad.PROYECTO, 1L, "proyectoId: " + proy.getId());
+
 		proyectoDto = this.modelMapper.map(proy, ProyectoDTO.class);
 		proyectoDto.setFraccionesExternas(fraccionExternasDto);
 
 		return proyectoDto;
 	}
 
+	@Transactional
 	@Override
 	public ProyectoDTO update(ProyectoDTO proyectoDto) {
 
@@ -143,6 +154,8 @@ public class ProyectoServiceImpl implements ProyectoService{
 
 				return cp;
 			}).collect(Collectors.toList());
+
+			this.operacionRepository.saveOperacion(TipoOperacion.UPDATE, TipoEntidad.PROYECTO, 1L, "proyectoId: " + proy.getId());
 
 			proyectoDto = this.modelMapper.map(proy, ProyectoDTO.class);
 			proyectoDto.setFraccionesExternas(fraccionExternasDto);
@@ -284,6 +297,9 @@ public class ProyectoServiceImpl implements ProyectoService{
 
 				contFracciones++;
 			};
+
+			this.operacionRepository.saveOperacion(TipoOperacion.GENERATE, TipoEntidad.DOCUMENTO_FRACCIONES, 1L, "proyectoId: " + py.getId());
+
 		}
 
 		return proyectoTexto;

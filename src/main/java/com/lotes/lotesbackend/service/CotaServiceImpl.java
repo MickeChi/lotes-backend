@@ -5,10 +5,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.lotes.lotesbackend.constants.TipoEntidad;
+import com.lotes.lotesbackend.constants.TipoOperacion;
 import com.lotes.lotesbackend.dto.FraccionDTO;
 import com.lotes.lotesbackend.entity.Fraccion;
 import com.lotes.lotesbackend.entity.Proyecto;
 import com.lotes.lotesbackend.repository.FraccionRepository;
+import com.lotes.lotesbackend.repository.OperacionRepository;
 import com.lotes.lotesbackend.utils.CotaMaps;
 import com.lotes.lotesbackend.utils.FraccionMaps;
 import com.lotes.lotesbackend.utils.GenericMapper;
@@ -20,6 +23,7 @@ import org.springframework.stereotype.Service;
 import com.lotes.lotesbackend.dto.CotaDTO;
 import com.lotes.lotesbackend.entity.Cota;
 import com.lotes.lotesbackend.repository.CotaRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CotaServiceImpl implements CotaService{
@@ -29,6 +33,9 @@ public class CotaServiceImpl implements CotaService{
 
 	@Autowired
 	FraccionRepository fraccionRepository;
+
+	@Autowired
+	private OperacionRepository operacionRepository;
 
 	private final ModelMapper modelMapper;
 
@@ -55,6 +62,7 @@ public class CotaServiceImpl implements CotaService{
 	}
 
 	@Override
+	@Transactional
 	public CotaDTO save(CotaDTO cotaDto) {
 		Cota cota = this.modelMapper.map(cotaDto, Cota.class);
 		cota.setFraccion(this.fraccionRepository.findById(cotaDto.getFraccionId()).get());
@@ -62,16 +70,23 @@ public class CotaServiceImpl implements CotaService{
 		cota.setColindancias(colindancias);
 		cota = this.cotaRepository.save(cota);
 
+		this.operacionRepository.saveOperacion(TipoOperacion.CREATE, TipoEntidad.COTA, 1L, "cotaId: " + cota.getId());
+
+
 		return this.modelMapper.map(cota, CotaDTO.class);
 	}
 
 	@Override
+	@Transactional
 	public CotaDTO update(CotaDTO cotaDto) {
 		Cota cota = this.modelMapper.map(cotaDto, Cota.class);
 		cota.setFraccion(this.fraccionRepository.findById(cotaDto.getFraccionId()).get());
 		List<Fraccion> colindancias = cotaDto.getColindanciasIds().stream().map(c -> fraccionRepository.findById(c).get()).toList();
 		cota.setColindancias(colindancias);
 		cota = this.cotaRepository.save(cota);
+
+		this.operacionRepository.saveOperacion(TipoOperacion.UPDATE, TipoEntidad.COTA, 1L, "cotaId: " + cota.getId());
+
 		return this.modelMapper.map(cota, CotaDTO.class);
 	}
 
