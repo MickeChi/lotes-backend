@@ -45,6 +45,10 @@ public class Proyecto {
     
     @Column(name = "nombre_documento")
     private String nombreDocumento;
+    
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "empresa_id", referencedColumnName = "id", nullable = false)
+	private Empresa empresa;
 
     //@OneToMany(mappedBy = "proyecto", fetch = FetchType.EAGER)
     //private List<Fraccion> fracciones;

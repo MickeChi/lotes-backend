@@ -1,6 +1,5 @@
 package com.lotes.lotesbackend.repository;
 
-import com.lotes.lotesbackend.entity.Fraccion;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -17,14 +17,10 @@ public class CustomOperacionRepositoryImpl implements CustomOperacionRepository 
     @PersistenceContext
     private EntityManager entityManager;
 
-    /*public CustomOperacionRepositoryImpl(EntityManager entityManager){
-        this.entityManager = entityManager;
-    }*/
-
     @Override
     public Long saveOperacion(TipoOperacion tipoOperacion, TipoEntidad tipoEntidad, Long usuarioId, String datos) {
 
-        StoredProcedureQuery spq = entityManager.createStoredProcedureQuery("proyecto_lotes.spCrearOperacion");
+        /*StoredProcedureQuery spq = entityManager.createStoredProcedureQuery("proyecto_lotes.spCrearOperacion");
         spq.registerStoredProcedureParameter("P_TIPO_OPERACION_ID", Long.class, ParameterMode.IN);
         spq.registerStoredProcedureParameter("P_TIPO_ENTIDAD_ID", Long.class, ParameterMode.IN);
         spq.registerStoredProcedureParameter("P_USUARIO_ID", Long.class, ParameterMode.IN);
@@ -36,7 +32,8 @@ public class CustomOperacionRepositoryImpl implements CustomOperacionRepository 
         spq.setParameter("P_DATOS", datos);
 
         spq.execute();
-        Long operacionId = (Long) spq.getOutputParameterValue("P_OPERACION_ID");
+        Long operacionId = (Long) spq.getOutputParameterValue("P_OPERACION_ID");*/
+    	Long operacionId = 1L;
         return operacionId;
 
     }
@@ -46,6 +43,7 @@ public class CustomOperacionRepositoryImpl implements CustomOperacionRepository 
 
         List<IndicadorOperacion> indicadores = new ArrayList<>();
 
+        /*
         StoredProcedureQuery spq = entityManager.createStoredProcedureQuery("proyecto_lotes.spIndicadoresOperaciones", "IndicadorMapping");
         spq.registerStoredProcedureParameter("P_USUARIO_ID", Long.class, ParameterMode.IN);
         spq.registerStoredProcedureParameter("P_TIPO_INDICADOR", Integer.class, ParameterMode.IN);
@@ -53,7 +51,8 @@ public class CustomOperacionRepositoryImpl implements CustomOperacionRepository 
         spq.setParameter("P_TIPO_INDICADOR", tipoIndicador.getTipo());
 
         spq.execute();
-        indicadores = spq.getResultList();
+        indicadores = spq.getResultList();        
+        */
 
         return indicadores;
     }

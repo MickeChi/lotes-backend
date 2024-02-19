@@ -1,6 +1,5 @@
 package com.lotes.lotesbackend.entity;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -16,28 +15,46 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.Data;
 
+@Entity(name = "usuarios")
 @Data
-@Entity(name = "pagos")
-public class Pago {
+public class Usuario {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(name = "monto")
-	private BigDecimal monto;
+	@Column(name = "nombre")
+	private String nombre;
 	
-	@Column(name = "creditos")
-	private Integer creditos;
+	@Column(name = "apellido_materno")
+	private String apellidoMaterno;
 	
-	@Column(name = "referencia")
-	private String referencia;
+	@Column(name = "apellido_paterno")
+	private String apellidoPaterno;
 	
-	@Column(name = "metodo")
-	private String metodo;
+	@Column(name = "curp")
+	private String curp;
 	
-	@Column(name = "canal_pago")
-	private String canalPago;
+	@Column(name = "direccion")
+	private String direccion;
+	
+	@Column(name = "telefono")
+	private String telefono;
+	
+	@Column(name = "esAdmin")
+	private boolean esAdmin;
+	
+	@Column(name = "status")
+	private boolean status;
+	
+	@Column(name = "email")
+	private String email;
+	
+	@Column(name = "password")
+	private String password;
+	
+	@Column(name = "avatar")
+	private String avatar;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "empresa_id", referencedColumnName = "id", nullable = false)
@@ -48,5 +65,4 @@ public class Pago {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
-	
 }

@@ -1,4 +1,4 @@
-package com.lotes.lotesbackend.entity;
+package com.lotes.lotesbackend.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -17,36 +17,25 @@ import jakarta.persistence.ManyToOne;
 import lombok.Data;
 
 @Data
-@Entity(name = "pagos")
-public class Pago {
+public class PagoDTO {
 	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+
 	private Long id;
 	
-	@Column(name = "monto")
 	private BigDecimal monto;
 	
-	@Column(name = "creditos")
 	private Integer creditos;
 	
-	@Column(name = "referencia")
 	private String referencia;
 	
-	@Column(name = "metodo")
 	private String metodo;
 	
-	@Column(name = "canal_pago")
 	private String canalPago;
 	
-	@ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "empresa_id", referencedColumnName = "id", nullable = false)
-	private Empresa empresa;
+	private EmpresaDTO empresa;
 	
-	@CreationTimestamp
     private LocalDateTime createdAt;
 
-    @UpdateTimestamp
     private LocalDateTime updatedAt;
 	
 }

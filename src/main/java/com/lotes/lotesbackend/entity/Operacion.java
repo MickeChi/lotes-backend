@@ -14,9 +14,10 @@ public class Operacion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(name = "usuario_id")
-    private Long usuarioId;
+    
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "usuario_id", referencedColumnName = "id", nullable = false)
+    private Usuario usuario;
 
     @Column(name = "datos")
     private String datos;
