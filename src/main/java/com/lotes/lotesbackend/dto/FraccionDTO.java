@@ -53,7 +53,4 @@ public class FraccionDTO {
 
     private LocalDateTime updatedAt;
 	
-	
-	
-	
 }

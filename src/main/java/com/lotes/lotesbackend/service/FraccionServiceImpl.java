@@ -5,7 +5,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.lotes.lotesbackend.constants.TipoEntidad;
+import com.lotes.lotesbackend.constants.TipoOperacion;
 import com.lotes.lotesbackend.entity.Proyecto;
+import com.lotes.lotesbackend.repository.OperacionRepository;
 import com.lotes.lotesbackend.repository.ProyectoRepository;
 import com.lotes.lotesbackend.utils.FraccionMaps;
 import com.lotes.lotesbackend.utils.GenericMapper;
@@ -17,6 +20,7 @@ import org.springframework.stereotype.Service;
 import com.lotes.lotesbackend.dto.FraccionDTO;
 import com.lotes.lotesbackend.entity.Fraccion;
 import com.lotes.lotesbackend.repository.FraccionRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class FraccionServiceImpl implements FraccionService{
@@ -26,6 +30,9 @@ public class FraccionServiceImpl implements FraccionService{
 
 	@Autowired
 	ProyectoRepository proyectoRepository;
+
+	@Autowired
+	private OperacionRepository operacionRepository;
 	
 	private final ModelMapper modelMapper;
 
@@ -54,6 +61,7 @@ public class FraccionServiceImpl implements FraccionService{
 	}
 
 	@Override
+	@Transactional
 	public FraccionDTO save(FraccionDTO fraccionDto) {
 
 		Fraccion frac = this.modelMapper.map(fraccionDto, Fraccion.class);
@@ -61,10 +69,13 @@ public class FraccionServiceImpl implements FraccionService{
 		frac.setProyecto(proy);
 
 		frac = this.fraccionRepository.save(frac);
+		this.operacionRepository.saveOperacion(TipoOperacion.CREATE, TipoEntidad.FRACCION, 1L, "fraccionId: " + frac.getId());
+
 		return this.modelMapper.map(frac, FraccionDTO.class);
 	}
 
 	@Override
+	@Transactional
 	public FraccionDTO update(FraccionDTO fraccionDto) {
 		Optional<Fraccion> fracOp = this.fraccionRepository.findById(fraccionDto.getId());
 		if(fracOp.isPresent()) {
@@ -73,6 +84,9 @@ public class FraccionServiceImpl implements FraccionService{
 			fraccionSave.setProyecto(proy);
 			fraccionSave = this.fraccionRepository.save(fraccionSave);
 			fraccionDto = this.modelMapper.map(fraccionSave, FraccionDTO.class);
+
+			this.operacionRepository.saveOperacion(TipoOperacion.UPDATE, TipoEntidad.FRACCION, 1L, "fraccionId: " + fraccionDto.getId());
+
 		}		
 		
 		return fraccionDto;
