@@ -3,6 +3,7 @@ package com.lotes.lotesbackend.dto;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import com.lotes.lotesbackend.constants.Estatus;
 import com.lotes.lotesbackend.constants.Orientacion;
 import com.lotes.lotesbackend.constants.TipoLinea;
 
@@ -28,6 +29,8 @@ public class FraccionExternaDTO {
     private BigDecimal medida;
 
     boolean colindanciaProyecto;
+
+    private Estatus estatus;
     
     private LocalDateTime createdAt;
 

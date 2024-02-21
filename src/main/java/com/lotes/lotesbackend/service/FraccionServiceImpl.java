@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.lotes.lotesbackend.constants.Estatus;
 import com.lotes.lotesbackend.constants.TipoEntidad;
 import com.lotes.lotesbackend.constants.TipoOperacion;
 import com.lotes.lotesbackend.entity.Proyecto;
@@ -51,6 +52,17 @@ public class FraccionServiceImpl implements FraccionService{
 	}
 
 	@Override
+	public List<FraccionDTO> findAll(Integer estatusId) {
+		Estatus estatus = (estatusId == null) ? Estatus.ACTIVO : Estatus.of(estatusId);
+
+		return this.fraccionRepository.getFraccionsByEstatus(estatus).stream()
+				.map(p-> {
+					return this.modelMapper.map(p, FraccionDTO.class);
+				})
+				.collect(Collectors.toList());
+	}
+
+	@Override
 	public Optional<FraccionDTO> findById(Long id) {
 		Optional<FraccionDTO> fracDtoOp = Optional.empty();
 		Optional<Fraccion> fracOp = this.fraccionRepository.findById(id);
@@ -93,11 +105,28 @@ public class FraccionServiceImpl implements FraccionService{
 	}
 
 	@Override
+	public FraccionDTO delete(Long id) {
+		Optional<Fraccion> fracOp = this.fraccionRepository.findById(id);
+		Fraccion fracDelete = new Fraccion();
+		if(fracOp.isPresent()) {
+			fracDelete = fracOp.get();
+			fracDelete.setEstatus(Estatus.DESACTIVADO);
+			fracDelete = this.fraccionRepository.save(fracDelete);
+
+			this.operacionRepository.saveOperacion(TipoOperacion.DELETE, TipoEntidad.FRACCION, 1L, "fraccionId: " + fracDelete.getId());
+
+		}
+
+		return this.modelMapper.map(fracDelete, FraccionDTO.class);
+	}
+
+	@Override
 	public List<FraccionDTO> getFraccionesByProyectoId(Long proyectoId) {
 		List<FraccionDTO> respuesta = new ArrayList<>();
 		Optional<Proyecto> proyOp = this.proyectoRepository.findById(proyectoId);
 		if(proyOp.isPresent()) {
 			respuesta = this.fraccionRepository.getFraccionsByProyectoId(proyectoId).stream()
+					.filter(p -> p.getEstatus().equals(Estatus.ACTIVO))
 					.map(p-> {
 						return this.modelMapper.map(p, FraccionDTO.class);
 					})

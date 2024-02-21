@@ -49,8 +49,8 @@ public class Proyecto {
 
     //@OneToMany(mappedBy = "proyecto", fetch = FetchType.EAGER)
     //private List<Fraccion> fracciones;
-    
-    @Column(name = "estatus")
+
+    @Column(name = "estatus", columnDefinition = "integer default 1")
     private Estatus estatus;
 
     @CreationTimestamp

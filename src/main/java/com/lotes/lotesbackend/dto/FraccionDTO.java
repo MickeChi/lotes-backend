@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.lotes.lotesbackend.constants.Estatus;
 import com.lotes.lotesbackend.constants.TipoFraccion;
 import com.lotes.lotesbackend.constants.Uso;
 import lombok.Data;
@@ -48,6 +49,8 @@ public class FraccionDTO {
     private Integer numeroParcela;
 
     private String descripcion;
+
+    private Estatus estatus;
 
     private LocalDateTime createdAt;
 

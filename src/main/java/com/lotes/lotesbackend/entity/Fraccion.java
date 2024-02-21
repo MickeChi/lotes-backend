@@ -68,8 +68,8 @@ public class Fraccion {
 
     @Column(name = "descripcion", length = 200)
     private String descripcion;
-    
-    @Column(name = "estatus")
+
+    @Column(name = "estatus", columnDefinition = "integer default 1")
     private Estatus estatus;
 
     @CreationTimestamp

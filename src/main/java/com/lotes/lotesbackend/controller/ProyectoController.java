@@ -51,7 +51,7 @@ public class ProyectoController {
 	@GetMapping
 	public ResponseEntity<?> findAll(@Nullable @RequestParam(value = "estatus", required = false) Integer status){
 		
-		List<ProyectoDTO> proyectosList = proyectoService.findAll();
+		List<ProyectoDTO> proyectosList = proyectoService.findAll(status);
 		return ResponseEntity.ok(proyectosList);
 	}
 

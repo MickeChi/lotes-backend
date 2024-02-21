@@ -39,8 +39,8 @@ public class Cota {
             joinColumns = @JoinColumn(name = "cota_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "fraccion_id", referencedColumnName = "id"))
     private List<Fraccion> colindancias;
-    
-    @Column(name = "estatus")
+
+    @Column(name = "estatus", columnDefinition = "integer default 1")
     private Estatus estatus;
 
     @CreationTimestamp

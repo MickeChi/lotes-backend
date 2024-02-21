@@ -1,5 +1,6 @@
 package com.lotes.lotesbackend.controller;
 
+import com.lotes.lotesbackend.constants.Estatus;
 import com.lotes.lotesbackend.constants.Orientacion;
 import com.lotes.lotesbackend.constants.TipoLinea;
 import com.lotes.lotesbackend.dto.CotaDTO;
@@ -7,6 +8,7 @@ import com.lotes.lotesbackend.dto.FraccionDTO;
 import com.lotes.lotesbackend.service.CotaService;
 import com.lotes.lotesbackend.service.FraccionService;
 import com.lotes.lotesbackend.service.ProyectoService;
+import jakarta.annotation.Nullable;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,12 +33,13 @@ public class CotaController {
     CotaService cotaService;
 
     @GetMapping
-    public ResponseEntity<?> findAll(@RequestParam(name = "fraccionId") Long fraccionId){
+    public ResponseEntity<?> findAll(@RequestParam(name = "fraccionId") Long fraccionId,
+                                     @Nullable @RequestParam(value = "estatus", required = false) Integer status){
         List<CotaDTO> cotaList = new ArrayList<>();
         if(fraccionId != null){
             cotaList = cotaService.getCotasByFraccionId(fraccionId);
         }else{
-            cotaList = cotaService.findAll();
+            cotaList = cotaService.findAll(status);
         }
 
         return ResponseEntity.ok(cotaList);
@@ -74,5 +77,15 @@ public class CotaController {
             return ResponseEntity.badRequest().build();
         }
 
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable("id") Long id){
+        Optional<CotaDTO> cotaOp = cotaService.findById(id);
+        if(!cotaOp.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(cotaService.delete(id));
     }
 }
