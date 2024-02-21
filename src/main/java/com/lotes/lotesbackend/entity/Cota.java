@@ -1,5 +1,6 @@
 package com.lotes.lotesbackend.entity;
 
+import com.lotes.lotesbackend.constants.Estatus;
 import com.lotes.lotesbackend.constants.Orientacion;
 import com.lotes.lotesbackend.constants.TipoLinea;
 import jakarta.persistence.*;
@@ -38,6 +39,9 @@ public class Cota {
             joinColumns = @JoinColumn(name = "cota_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "fraccion_id", referencedColumnName = "id"))
     private List<Fraccion> colindancias;
+
+    @Column(name = "estatus", columnDefinition = "integer default 1")
+    private Estatus estatus;
 
     @CreationTimestamp
     private LocalDateTime createdAt;

@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.lotes.lotesbackend.constants.Estatus;
 import com.lotes.lotesbackend.constants.Orientacion;
 import com.lotes.lotesbackend.constants.Uso;
 import lombok.Data;
@@ -36,6 +37,8 @@ public class ProyectoDTO {
     private String nombreDocumento;
 
     private List<FraccionExternaDTO> fraccionesExternas = new ArrayList<>();
+
+    private Estatus estatus;
 
     private LocalDateTime createdAt;
 

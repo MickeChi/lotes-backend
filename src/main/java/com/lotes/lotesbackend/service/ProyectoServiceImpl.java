@@ -3,11 +3,11 @@ package com.lotes.lotesbackend.service;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.lotes.lotesbackend.constants.Estatus;
 import com.lotes.lotesbackend.constants.TipoEntidad;
 import com.lotes.lotesbackend.constants.TipoFraccion;
 import com.lotes.lotesbackend.constants.TipoOperacion;
-import com.lotes.lotesbackend.dto.FraccionTextoDTO;
-import com.lotes.lotesbackend.dto.ProyectoTextoDTO;
+import com.lotes.lotesbackend.dto.*;
 import com.lotes.lotesbackend.repository.OperacionRepository;
 import com.lotes.lotesbackend.utils.FraccionMaps;
 import com.lotes.lotesbackend.utils.GenericMapper;
@@ -16,8 +16,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.lotes.lotesbackend.dto.FraccionExternaDTO;
-import com.lotes.lotesbackend.dto.ProyectoDTO;
 import com.lotes.lotesbackend.entity.Cota;
 import com.lotes.lotesbackend.entity.Fraccion;
 import com.lotes.lotesbackend.entity.Proyecto;
@@ -56,6 +54,17 @@ public class ProyectoServiceImpl implements ProyectoService{
 				.stream().map( p-> this.modelMapper.map(p, ProyectoDTO.class))
 				.collect(Collectors.toList());
 	}
+
+	@Override
+	public List<ProyectoDTO> findAll(Integer estatusId) {
+		Estatus estatus = (estatusId == null) ? Estatus.ACTIVO : Estatus.of(estatusId);
+
+		return this.proyectoRepository.getProyectosByEstatus(estatus)
+				.stream().map( p-> this.modelMapper.map(p, ProyectoDTO.class))
+				.collect(Collectors.toList());
+	}
+
+
 
 	@Override
 	public Optional<ProyectoDTO> findById(Long id) {
@@ -129,6 +138,7 @@ public class ProyectoServiceImpl implements ProyectoService{
 				frac.setDescripcion(cp.getDescripcion());
 				frac.setProyecto(proy);
 				frac.setColindanciaProyecto(cp.isColindanciaProyecto());
+				frac.setEstatus(cp.getEstatus());
 
 				frac = this.fraccionRepository.save(frac);
 
@@ -164,6 +174,11 @@ public class ProyectoServiceImpl implements ProyectoService{
 
 		return proyectoDto;
 
+	}
+
+	@Override
+	public ProyectoDTO delete(Long ID) {
+		return null;
 	}
 
 	@Override
@@ -217,11 +232,16 @@ public class ProyectoServiceImpl implements ProyectoService{
 		if(proOp.isPresent()){
 			Proyecto py = proOp.get();
 			proyectoTexto.setProyectoId(py.getId());
-			List<Fraccion> fracciones = fraccionRepository.findByProyectoIdAndColindanciaProyecto(proyectoId, false);
+			List<Fraccion> fracciones = fraccionRepository.findByProyectoIdAndColindanciaProyecto(proyectoId, false)
+					.stream().filter(f -> f.getEstatus().equals(Estatus.ACTIVO))
+					.collect(Collectors.toList());
 			int contFracciones = 1;
 			for(Fraccion f: fracciones ){
 
-				List<Cota> cotas = cotaRepository.getCotasByFraccionId(f.getId());
+				List<Cota> cotas = cotaRepository.getCotasByFraccionId(f.getId())
+						.stream().filter(c -> c.getEstatus().equals(Estatus.ACTIVO))
+						.collect(Collectors.toList());
+
 				if(cotas.isEmpty()){
 					continue;
 				}
@@ -263,32 +283,34 @@ public class ProyectoServiceImpl implements ProyectoService{
 					}
 
 					List<Fraccion> colindanciasList = c.getColindancias();
-					Fraccion colindancia = colindanciasList.get(0);
-					String loteDescripcion = null;
-					if(colindancia.isColindanciaProyecto()){
-						loteDescripcion = NumberUtils.allNumbersToText(colindancia.getDescripcion());
-					}else{
-						loteDescripcion = "tablaje catastral " + NumberUtils.numeroATexto(colindancia.getTablaje().toString()) + " ";
-						if(colindancia.getTipoFraccion() != null && colindancia.getTipoFraccion().equals(TipoFraccion.VIALIDAD)){
-							loteDescripcion += "(" + colindancia.getTipoFraccion().getTipo() + ") ";
+					if(colindanciasList != null && !colindanciasList.isEmpty()){
+						Fraccion colindancia = colindanciasList.get(0);
+						String loteDescripcion = null;
+						if(colindancia.isColindanciaProyecto()){
+							loteDescripcion = NumberUtils.allNumbersToText(colindancia.getDescripcion());
+						}else{
+							loteDescripcion = "tablaje catastral " + NumberUtils.numeroATexto(colindancia.getTablaje().toString()) + " ";
+							if(colindancia.getTipoFraccion() != null && colindancia.getTipoFraccion().equals(TipoFraccion.VIALIDAD)){
+								loteDescripcion += "(" + colindancia.getTipoFraccion().getTipo() + ") ";
+							}
+							loteDescripcion += "resultante de la presente división";
 						}
-						loteDescripcion += "resultante de la presente división";
+
+						String medidaTxt = NumberUtils.numeroATexto(c.getMedida().toString());
+
+						sb.append(textoExtra1);
+						sb.append(
+								colindanciaTemplate
+										.replaceAll("V_ORIENTACION", c.getOrientacion().getNombre().toLowerCase())
+										.replaceAll("V_TIPO_LINEA", c.getTipoLinea().getNombre().toLowerCase())
+										.replaceAll("V_LOTE_DESCRIPCION", loteDescripcion)
+										.replaceAll("V_MEDIDA", c.getMedida().toString())
+										.replaceAll("V_MEDIDA", c.getMedida().toString())
+										.replaceAll("V_TXT_MEDIDA", medidaTxt)
+						);
+
+						contCota++;
 					}
-
-					String medidaTxt = NumberUtils.numeroATexto(c.getMedida().toString());
-
-					sb.append(textoExtra1);
-					sb.append(
-							colindanciaTemplate
-									.replaceAll("V_ORIENTACION", c.getOrientacion().getNombre().toLowerCase())
-									.replaceAll("V_TIPO_LINEA", c.getTipoLinea().getNombre().toLowerCase())
-									.replaceAll("V_LOTE_DESCRIPCION", loteDescripcion)
-									.replaceAll("V_MEDIDA", c.getMedida().toString())
-									.replaceAll("V_MEDIDA", c.getMedida().toString())
-									.replaceAll("V_TXT_MEDIDA", medidaTxt)
-					);
-
-					contCota++;
 				}
 
 				sb.append(". ");

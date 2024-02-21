@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.lotes.lotesbackend.constants.Estatus;
 import com.lotes.lotesbackend.constants.TipoEntidad;
 import com.lotes.lotesbackend.constants.TipoOperacion;
 import com.lotes.lotesbackend.dto.FraccionDTO;
@@ -52,6 +53,14 @@ public class CotaServiceImpl implements CotaService{
 	}
 
 	@Override
+	public List<CotaDTO> findAll(Integer estatusId) {
+		Estatus estatus = (estatusId == null) ? Estatus.ACTIVO : Estatus.of(estatusId);
+		return this.cotaRepository.getCotasByEstatus(estatus).stream()
+				.map(p-> this.modelMapper.map(p, CotaDTO.class))
+				.collect(Collectors.toList());
+	}
+
+	@Override
 	public Optional<CotaDTO> findById(Long id) {
 		Optional<CotaDTO> cotaDtoOp = Optional.empty();
 		Optional<Cota> cotaOp = this.cotaRepository.findById(id);
@@ -91,11 +100,29 @@ public class CotaServiceImpl implements CotaService{
 	}
 
 	@Override
+	@Transactional
+	public CotaDTO delete(Long id) {
+
+		Optional<Cota> cotaOp = this.cotaRepository.findById(id);
+		Cota cota = new Cota();
+		if(cotaOp.isPresent()) {
+			cota = cotaOp.get();
+			cota.setEstatus(Estatus.DESACTIVADO);
+			cota = this.cotaRepository.save(cota);
+			this.operacionRepository.saveOperacion(TipoOperacion.DELETE, TipoEntidad.COTA, 1L, "cotaId: " + cota.getId());
+
+		}
+
+		return this.modelMapper.map(cota, CotaDTO.class);
+	}
+
+	@Override
 	public List<CotaDTO> getCotasByFraccionId(Long fraccionId) {
 		List<CotaDTO> respuesta = new ArrayList<>();
 		Optional<Fraccion> fracOp = this.fraccionRepository.findById(fraccionId);
 		if(fracOp.isPresent()) {
 			respuesta = this.cotaRepository.getCotasByFraccionId(fraccionId).stream()
+					.filter(p -> p.getEstatus().equals(Estatus.ACTIVO))
 					.map(p-> {
 						return this.modelMapper.map(p, CotaDTO.class);
 					})

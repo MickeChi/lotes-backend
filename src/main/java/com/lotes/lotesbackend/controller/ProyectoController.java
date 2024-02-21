@@ -49,8 +49,9 @@ public class ProyectoController {
 	FileStorageService storageService;
 
 	@GetMapping
-	public ResponseEntity<?> findAll(){
-		List<ProyectoDTO> proyectosList = proyectoService.findAll();
+	public ResponseEntity<?> findAll(@Nullable @RequestParam(value = "estatus", required = false) Integer status){
+		
+		List<ProyectoDTO> proyectosList = proyectoService.findAll(status);
 		return ResponseEntity.ok(proyectosList);
 	}
 

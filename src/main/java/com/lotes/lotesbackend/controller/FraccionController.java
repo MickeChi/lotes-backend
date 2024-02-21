@@ -9,6 +9,7 @@ import com.lotes.lotesbackend.dto.ProyectoDTO;
 import com.lotes.lotesbackend.service.CotaService;
 import com.lotes.lotesbackend.service.FraccionService;
 import com.lotes.lotesbackend.service.ProyectoService;
+import jakarta.annotation.Nullable;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,12 +35,13 @@ public class FraccionController {
     ModelMapper modelMapper;
 
     @GetMapping
-    public ResponseEntity<?> findAll(@RequestParam(name = "proyectoId") Long proyectoId){
+    public ResponseEntity<?> findAll(@RequestParam(name = "proyectoId") Long proyectoId,
+                                     @Nullable @RequestParam(value = "estatus", required = false) Integer status){
         List<FraccionDTO> fraccionsList = new ArrayList<>();
         if(proyectoId != null){
             fraccionsList = fraccionService.getFraccionesByProyectoId(proyectoId);
         }else{
-            fraccionsList = fraccionService.findAll();
+            fraccionsList = fraccionService.findAll(status);
         }
         return ResponseEntity.ok(fraccionsList);
     }
@@ -85,5 +87,15 @@ public class FraccionController {
             return ResponseEntity.badRequest().build();
         }
 
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable("id") Long id){
+        Optional<FraccionDTO> fracOp = fraccionService.findById(id);
+        if(!fracOp.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(fraccionService.delete(id));
     }
 }

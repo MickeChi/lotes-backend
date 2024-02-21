@@ -1,5 +1,6 @@
 package com.lotes.lotesbackend.entity;
 
+import com.lotes.lotesbackend.constants.Estatus;
 import com.lotes.lotesbackend.constants.TipoFraccion;
 import com.lotes.lotesbackend.constants.Uso;
 import jakarta.persistence.*;
@@ -67,6 +68,9 @@ public class Fraccion {
 
     @Column(name = "descripcion", length = 200)
     private String descripcion;
+
+    @Column(name = "estatus", columnDefinition = "integer default 1")
+    private Estatus estatus;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
