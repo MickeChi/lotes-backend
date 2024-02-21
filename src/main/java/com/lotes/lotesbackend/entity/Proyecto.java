@@ -1,5 +1,6 @@
 package com.lotes.lotesbackend.entity;
 
+import com.lotes.lotesbackend.constants.Estatus;
 import com.lotes.lotesbackend.constants.Orientacion;
 import com.lotes.lotesbackend.constants.Uso;
 import jakarta.persistence.*;
@@ -48,6 +49,9 @@ public class Proyecto {
 
     //@OneToMany(mappedBy = "proyecto", fetch = FetchType.EAGER)
     //private List<Fraccion> fracciones;
+    
+    @Column(name = "estatus")
+    private Estatus estatus;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
