@@ -84,6 +84,9 @@ public class ProyectoServiceImpl implements ProyectoService{
 	@Transactional
 	public ProyectoDTO save(ProyectoDTO proyectoDto) {
 
+		Estatus estatus = proyectoDto.getEstatus() != null ? proyectoDto.getEstatus() : Estatus.ACTIVO;
+		proyectoDto.setEstatus(estatus);
+
 		Proyecto proy = this.proyectoRepository.save(this.modelMapper.map(proyectoDto, Proyecto.class));
 
 		List<FraccionExternaDTO> fraccionExternasDto =  proyectoDto.getFraccionesExternas().stream().map(cp -> {
@@ -91,13 +94,14 @@ public class ProyectoServiceImpl implements ProyectoService{
 			frac.setDescripcion(cp.getDescripcion());
 			frac.setProyecto(proy);
 			frac.setColindanciaProyecto(cp.isColindanciaProyecto());
-
+			frac.setEstatus(cp.getEstatus());
 
 			frac = this.fraccionRepository.save(frac);
 
 			Cota cotap = new Cota();
 			cotap.setColindancias(new ArrayList<>());
 			cotap.setFraccion(frac);
+			cotap.setEstatus(Estatus.ACTIVO);
 			cotap.setMedida(cp.getMedida());
 			cotap.setOrden(cp.getOrden());
 			cotap.setOrientacion(cp.getOrientacion());
@@ -125,6 +129,9 @@ public class ProyectoServiceImpl implements ProyectoService{
 
 		Optional<Proyecto> proyOp = this.proyectoRepository.findById(proyectoDto.getId());
 		if(proyOp.isPresent()) {
+			Estatus estatus = proyectoDto.getEstatus() != null ? proyectoDto.getEstatus() : Estatus.ACTIVO;
+			proyectoDto.setEstatus(estatus);
+
 			Proyecto proy = this.proyectoRepository.save(this.modelMapper.map(proyectoDto, Proyecto.class));
 
 			List<FraccionExternaDTO> fraccionExternasDto = proyectoDto.getFraccionesExternas().stream().map(cp -> {
@@ -152,6 +159,7 @@ public class ProyectoServiceImpl implements ProyectoService{
 
 				cotap.setColindancias(new ArrayList<>());
 				cotap.setFraccion(frac);
+				cotap.setEstatus(Estatus.ACTIVO);
 				cotap.setMedida(cp.getMedida());
 				cotap.setOrden(cp.getOrden());
 				cotap.setOrientacion(cp.getOrientacion());

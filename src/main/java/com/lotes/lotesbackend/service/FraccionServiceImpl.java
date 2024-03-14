@@ -79,6 +79,8 @@ public class FraccionServiceImpl implements FraccionService{
 		Fraccion frac = this.modelMapper.map(fraccionDto, Fraccion.class);
 		Proyecto proy = this.modelMapper.map(fraccionDto.getProyecto(), Proyecto.class);
 		frac.setProyecto(proy);
+		Estatus estatus = frac.getEstatus() != null ? frac.getEstatus() : Estatus.ACTIVO;
+		frac.setEstatus(estatus);
 
 		frac = this.fraccionRepository.save(frac);
 		this.operacionRepository.saveOperacion(TipoOperacion.CREATE, TipoEntidad.FRACCION, 1L, "fraccionId: " + frac.getId());
@@ -94,6 +96,8 @@ public class FraccionServiceImpl implements FraccionService{
 			Fraccion fraccionSave = this.modelMapper.map(fraccionDto, Fraccion.class);
 			Proyecto proy = this.proyectoRepository.findById(fraccionDto.getProyectoId()).get();
 			fraccionSave.setProyecto(proy);
+			Estatus estatus = fraccionSave.getEstatus() != null ? fraccionSave.getEstatus() : Estatus.ACTIVO;
+			fraccionSave.setEstatus(estatus);
 			fraccionSave = this.fraccionRepository.save(fraccionSave);
 			fraccionDto = this.modelMapper.map(fraccionSave, FraccionDTO.class);
 

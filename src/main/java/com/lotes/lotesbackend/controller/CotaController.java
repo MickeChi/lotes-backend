@@ -57,7 +57,6 @@ public class CotaController {
 
     @PostMapping
     public ResponseEntity<?> create(@RequestBody CotaDTO cotaDTO){
-
         cotaDTO = cotaService.save(cotaDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(cotaDTO);
 

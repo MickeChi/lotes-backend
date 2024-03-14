@@ -73,6 +73,10 @@ public class CotaServiceImpl implements CotaService{
 	@Override
 	@Transactional
 	public CotaDTO save(CotaDTO cotaDto) {
+
+		Estatus estatus = cotaDto.getEstatus() != null ? cotaDto.getEstatus() : Estatus.ACTIVO;
+		cotaDto.setEstatus(estatus);
+
 		Cota cota = this.modelMapper.map(cotaDto, Cota.class);
 		cota.setFraccion(this.fraccionRepository.findById(cotaDto.getFraccionId()).get());
 		List<Fraccion> colindancias = cotaDto.getColindanciasIds().stream().map(c -> fraccionRepository.findById(c).get()).toList();
@@ -88,6 +92,10 @@ public class CotaServiceImpl implements CotaService{
 	@Override
 	@Transactional
 	public CotaDTO update(CotaDTO cotaDto) {
+
+		Estatus estatus = cotaDto.getEstatus() != null ? cotaDto.getEstatus() : Estatus.ACTIVO;
+		cotaDto.setEstatus(estatus);
+
 		Cota cota = this.modelMapper.map(cotaDto, Cota.class);
 		cota.setFraccion(this.fraccionRepository.findById(cotaDto.getFraccionId()).get());
 		List<Fraccion> colindancias = cotaDto.getColindanciasIds().stream().map(c -> fraccionRepository.findById(c).get()).toList();
